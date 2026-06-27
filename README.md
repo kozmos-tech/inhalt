@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Inhalt
 
-## Getting Started
+**The CMS your AI tools can run.**
 
-First, run the development server:
+Inhalt is an open-source, MCP-native CMS. Instead of a traditional admin UI or a REST/GraphQL SDK, the content layer is exposed entirely through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). Any MCP client connects to the Inhalt server and you create and edit content just by chatting.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The protocol is the API. There is no SDK and no glue code. The client reads your content schema, finds the right entry, and proposes a clean, typed patch against real fields, never freeform text.
+
+- **Website:** [inhalt.tech](https://inhalt.tech)
+- **MCP endpoint:** `https://api.inhalt.tech/mcp`
+- **License:** MIT
+- **Self-hostable:** one container, your database, your keys. A hosted edge is also available.
+
+## How it works
+
+Three steps, no SDK.
+
+1. **Connect the endpoint.** Add one block to your MCP config. Inhalt exposes your whole content tree as typed tools.
+2. **Operate on content.** The client reads the schema, finds the right entry, and proposes a clean patch against real, typed fields.
+3. **Save and publish.** Every change is checked against your schema, saved, and pushed to your live read API in one step.
+
+### Example MCP config
+
+```json
+{
+  "mcpServers": {
+    "inhalt": {
+      "url": "https://api.inhalt.tech/mcp",
+      "headers": {
+        "Authorization": "Bearer ••••"
+      }
+    }
+  }
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Feature | Description |
+| --- | --- |
+| **MCP-native** | The protocol is the API. Read, query, and patch content through tools any client already understands. |
+| **Typed schemas** | Model content once. Clients work strictly inside your fields, validated and never freeform. |
+| **Drafts and review** | Stage edits, preview them, and publish only when they are ready. |
+| **Headless delivery** | Query from anywhere over a clean, fast read API. |
+| **Scoped access** | Grant a client exactly the entries and actions it should touch. |
+| **Self-host** | One container, your database, your keys. MIT licensed, end to end. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Supported clients
 
-## Learn More
+Inhalt works with every MCP client, including Claude, Cursor, VS Code, Zed, Windsurf, and Cline.
 
-To learn more about Next.js, take a look at the following resources:
+## Getting started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This repository is a [Next.js](https://nextjs.org) application. To run it locally:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Other scripts:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build   # production build
+npm run start   # serve the production build
+npm run lint    # run eslint
+```
+
+## License
+
+[MIT](https://opensource.org/licenses/MIT)
