@@ -14,4 +14,9 @@ export default defineConfig({
   datasource: {
     url: env("DATABASE_URL"),
   },
+  migrations: {
+    // Run via `prisma db seed` (or `npm run db:seed`). tsx is used so the
+    // generated Prisma client (TS, with extensionless imports) resolves.
+    seed: "tsx prisma/seed.ts",
+  },
 })
