@@ -1,13 +1,11 @@
-// Inhalt — content layer schema (planning draft).
+// Inhalt — content layer schema.
 //
-// Structure only. No database is connected yet (DATABASE_URL wired up later),
-// and Prisma is not installed as a dependency. This file defines the tables and
-// relationships so the data model can be reviewed before any of it is built.
-//
-// Deliberately out of scope here (added later):
-//   - Users / authentication. These will come from better-auth (User, Session,
-//     Account, Verification). Project will gain an owner / membership link then.
-//   - The MCP server itself.
+// Two halves:
+//   - The content model: Project (the tenant boundary), ApiKey, ContentType,
+//     Entry. Writes are typed against ContentType.fields (see app/lib/fields.ts).
+//   - Authentication: User, Session, Account, Verification are owned by
+//     better-auth (app/lib/auth.ts). Each User owns their Project(s); the bearer
+//     ApiKeys gate the MCP server (app/lib/bearer-auth.ts).
 
 generator client {
   provider = "prisma-client"
@@ -24,11 +22,15 @@ model Project {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique // used in the read API path
+  ownerId   String? // the User who owns this workspace; null for the seed default
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  owner        User?         @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   apiKeys      ApiKey[]
   contentTypes ContentType[]
+
+  @@index([ownerId])
 }
 
 /// Bearer token used by MCP clients. The plaintext secret is shown exactly once
@@ -92,4 +94,73 @@ enum EntryStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+// --- Authentication (better-auth) -------------------------------------------
+// These four models are managed by better-auth (app/lib/auth.ts). Field names
+// and table mappings match what the library expects; do not rename them. The
+// only local addition is the User -> Project ownership relation.
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  projects      Project[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

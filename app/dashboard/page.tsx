@@ -17,13 +17,11 @@ import {
   createKey,
   getKeysSnapshot,
   getServerKeysSnapshot,
-  getServerUserSnapshot,
-  getUserSnapshot,
   revokeKey,
-  signOut,
   subscribe,
   type ApiKey,
 } from "../lib/store"
+import { signOut, useSession } from "../lib/auth-client"
 import { eyebrow, ghostButton, input, primaryButton } from "../lib/ui"
 
 const ENDPOINT = "https://app.inhalt.tech/mcp"
@@ -59,11 +57,7 @@ function initials(email: string) {
 
 export default function DashboardPage() {
   const router = useRouter()
-  const user = useSyncExternalStore(
-    subscribe,
-    getUserSnapshot,
-    getServerUserSnapshot,
-  )
+  const { data: session } = useSession()
   const keys = useSyncExternalStore(
     subscribe,
     getKeysSnapshot,
@@ -75,7 +69,7 @@ export default function DashboardPage() {
   const [newName, setNewName] = useState("")
   const [revealed, setRevealed] = useState<ApiKey | null>(null)
 
-  const email = user?.email ?? "guest@inhalt.tech"
+  const email = session?.user?.email ?? "guest@inhalt.tech"
 
   // Scroll-spy: highlight the nav item for whichever section is in view.
   useEffect(() => {
@@ -106,8 +100,8 @@ export default function DashboardPage() {
     setCreating(false)
   }
 
-  function onSignOut() {
-    signOut()
+  async function onSignOut() {
+    await signOut()
     router.replace("/login")
   }
 

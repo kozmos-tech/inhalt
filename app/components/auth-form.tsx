@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { setUser } from "../lib/store"
+import { signIn, signUp } from "../lib/auth-client"
 import { eyebrow, input, label, primaryButton } from "../lib/ui"
 
 type Mode = "signin" | "signup"
@@ -37,12 +37,30 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [pending, setPending] = useState(false)
   const t = copy[mode]
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!email || !password) return
-    setUser(email)
+    if (!email || !password || pending) return
+
+    setPending(true)
+    setError(null)
+
+    // Sign-up needs a display name; the email local-part is a sensible default.
+    const result =
+      mode === "signup"
+        ? await signUp.email({ email, password, name: email.split("@")[0] || email })
+        : await signIn.email({ email, password })
+
+    setPending(false)
+
+    if (result.error) {
+      setError(result.error.message ?? "Something went wrong. Please try again.")
+      return
+    }
+
     router.push("/dashboard")
   }
 
@@ -101,8 +119,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
             />
           </div>
 
-          <button type="submit" className={primaryButton + " mt-1 w-full"}>
-            {t.action}
+          {error && (
+            <p className="text-[13px] text-red-400" role="alert">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={pending}
+            className={primaryButton + " mt-1 w-full disabled:opacity-60"}
+          >
+            {pending ? "…" : t.action}
           </button>
         </form>
       </div>

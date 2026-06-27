@@ -15,7 +15,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js"
 
 import { ApiError } from "../lib/api"
-import { authenticateBearer } from "../lib/auth"
+import { authenticateBearer } from "../lib/bearer-auth"
 import { parseScopes, assertScope, type ScopeAction } from "../lib/scopes"
 import * as ops from "../lib/operations"
 

@@ -1,10 +1,11 @@
-// Client-side mock store for auth + API keys.
+// Client-side mock store for API keys.
 //
-// There is no backend yet, so this persists to localStorage to make the flow
-// real and demoable. It is exposed as a subscribable external store so React
-// can read it via useSyncExternalStore (no hydration flash, no effects writing
-// state). Swap these functions for API calls when the server lands; the call
-// sites only depend on the signatures below.
+// Auth is now real (better-auth; see app/lib/auth-client.ts), but the dashboard's
+// keys list still runs on this localStorage mock pending its wire-up to the
+// session-scoped /api/keys routes. It is exposed as a subscribable external store
+// so React can read it via useSyncExternalStore (no hydration flash, no effects
+// writing state). Swap these functions for API calls when that wire-up lands; the
+// call sites only depend on the signatures below.
 
 export type ApiKey = {
   id: string
@@ -16,9 +17,6 @@ export type ApiKey = {
   secret?: string
 }
 
-export type User = { email: string }
-
-const USER_KEY = "inhalt.user"
 const KEYS_KEY = "inhalt.keys"
 
 const EMPTY_KEYS: ApiKey[] = []
@@ -46,24 +44,6 @@ function emit() {
 
 // --- snapshots (cached so references stay stable between renders) -----------
 
-let userCache: { raw: string | null; value: User | null } = {
-  raw: null,
-  value: null,
-}
-
-export function getUserSnapshot(): User | null {
-  if (typeof window === "undefined") return null
-  const raw = window.localStorage.getItem(USER_KEY)
-  if (raw !== userCache.raw) {
-    userCache = { raw, value: raw ? (JSON.parse(raw) as User) : null }
-  }
-  return userCache.value
-}
-
-export function getServerUserSnapshot(): User | null {
-  return null
-}
-
 let keysCache: { raw: string | null; value: ApiKey[] } = {
   raw: null,
   value: EMPTY_KEYS,
@@ -84,25 +64,10 @@ export function getServerKeysSnapshot(): ApiKey[] {
 
 // --- reads / mutations ------------------------------------------------------
 
-export function getUser(): User | null {
-  return getUserSnapshot()
-}
-
 function randomHex(bytes: number): string {
   const arr = new Uint8Array(bytes)
   crypto.getRandomValues(arr)
   return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("")
-}
-
-export function setUser(email: string) {
-  window.localStorage.setItem(USER_KEY, JSON.stringify({ email }))
-  emit()
-}
-
-export function signOut() {
-  if (typeof window === "undefined") return
-  window.localStorage.removeItem(USER_KEY)
-  emit()
 }
 
 export function createKey(name: string): ApiKey {

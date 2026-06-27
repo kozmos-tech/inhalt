@@ -1,32 +1,54 @@
-// Bearer-token authentication for the MCP server.
+// better-auth server instance — user accounts and dashboard sessions.
 //
-// This is where tenancy is finally resolved for the MCP surface: the bearer
-// secret in the Authorization header identifies an ApiKey, which belongs to a
-// Project. (The management REST routes still use the single-project getProject()
-// stub; only the MCP path authenticates a real key today.)
+// This is the human-facing half of auth (email + password, cookie sessions),
+// distinct from the machine-facing bearer keys in bearer-auth.ts that gate the
+// MCP server. Sessions are stored in Postgres via the Prisma adapter; the
+// nextCookies() plugin lets server actions set the session cookie.
+//
+// Each new user gets their own workspace: the create.after hook below provisions
+// a Project owned by that user, so signup yields a ready-to-use content space in
+// one step. getProject() (lib/project.ts) then resolves the caller's project from
+// their session.
+
+import { betterAuth } from "better-auth"
+import { prismaAdapter } from "better-auth/adapters/prisma"
+import { nextCookies } from "better-auth/next-js"
 
 import { prisma } from "./prisma"
-import { hashSecret } from "./keys"
 
-export type AuthenticatedKey = {
-  keyId: string
-  projectId: string
-  scopes: unknown // raw ApiKey.scopes JSON; parsed by lib/scopes
+// Turn an email into a readable, URL-safe project slug, with a short random
+// suffix so two "jane@..." signups can't collide on Project.slug (it is @unique
+// and used in the public read-API path).
+function projectSlug(email: string): string {
+  const base =
+    email
+      .split("@")[0]
+      ?.toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 32) || "workspace"
+  const suffix = Math.random().toString(16).slice(2, 8)
+  return `${base}-${suffix}`
 }
 
-// Resolve a plaintext bearer secret to its (non-revoked) key + project, or null
-// when it does not match an active key. We look up by the stored sha-256 hash;
-// the plaintext is never persisted.
-export async function authenticateBearer(secret: string | undefined): Promise<AuthenticatedKey | null> {
-  if (!secret) return null
-
-  const key = await prisma.apiKey.findUnique({ where: { hash: hashSecret(secret) } })
-  if (!key || key.revokedAt !== null) return null
-
-  // Best-effort usage stamp; a failure here must not block the request.
-  await prisma.apiKey
-    .update({ where: { id: key.id }, data: { lastUsedAt: new Date() } })
-    .catch(() => undefined)
-
-  return { keyId: key.id, projectId: key.projectId, scopes: key.scopes }
-}
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, { provider: "postgresql" }),
+  emailAndPassword: { enabled: true },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await prisma.project.create({
+            data: {
+              name: `${user.name || user.email.split("@")[0]}'s workspace`,
+              slug: projectSlug(user.email),
+              ownerId: user.id,
+            },
+          })
+        },
+      },
+    },
+  },
+  // nextCookies() must be the last plugin so it can attach Set-Cookie headers.
+  plugins: [nextCookies()],
+})
