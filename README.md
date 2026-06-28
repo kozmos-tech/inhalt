@@ -38,10 +38,10 @@ Inhalt works with every MCP client, including Claude, Cursor, VS Code, Zed, Wind
 
 ## Documentation
 
-- [Getting started](docs/getting-started.md) — connect an MCP client and operate on content.
-- [Development](docs/development.md) — run the repo locally, environment, and scripts.
-- [Copy & tone](docs/copy-style.md) — writing guidelines for product copy.
-- [Roadmap](docs/roadmap/) — planned work ([auth](docs/roadmap/auth.md), [self-host](docs/roadmap/self-host.md)).
+- [Getting started](docs/getting-started.md) - connect an MCP client and operate on content.
+- [Development](docs/development.md) - run the repo locally, environment, and scripts.
+- [Copy & tone](docs/copy-style.md) - writing guidelines for product copy.
+- [Roadmap](docs/roadmap/) - planned work ([auth](docs/roadmap/auth.md), [self-host](docs/roadmap/self-host.md)).
 
 ## License
 

@@ -1,4 +1,4 @@
-// Entries — single item.
+// Entries - single item.
 //   GET    /api/content-types/:typeKey/entries/:slug   (?view=draft|published)
 //   PATCH  /api/content-types/:typeKey/entries/:slug   typed patch -> draft
 //   DELETE /api/content-types/:typeKey/entries/:slug

@@ -5,8 +5,7 @@
 // the management surface (content-types, keys) maps a request to a tenant, so
 // the auth model lives here and the handlers stay identity-agnostic.
 //
-// Note: the public read API (app/api/read/[projectSlug]/...) does NOT use this —
-// it resolves a project by the slug in its path and stays unauthenticated. The
+// Note: the public read API (app/api/read/[projectSlug]/...) does NOT use this - // it resolves a project by the slug in its path and stays unauthenticated. The
 // MCP surface resolves its own tenant from the bearer key (lib/bearer-auth.ts).
 
 import { prisma } from "./prisma"

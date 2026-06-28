@@ -1,4 +1,4 @@
-// Read API — list published entries (public, published content only).
+// Read API - list published entries (public, published content only).
 //   GET /api/read/:projectSlug/:typeKey
 //   GET /api/read/:projectSlug/:typeKey?field=value   filter by a typed field
 //

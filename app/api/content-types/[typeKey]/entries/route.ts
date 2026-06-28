@@ -1,4 +1,4 @@
-// Entries — collection, scoped to a content type.
+// Entries - collection, scoped to a content type.
 //   GET  /api/content-types/:typeKey/entries   list (?status=, ?limit=, ?offset=)
 //   POST /api/content-types/:typeKey/entries   create a draft (validated)
 

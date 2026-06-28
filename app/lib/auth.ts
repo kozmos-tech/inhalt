@@ -1,4 +1,4 @@
-// better-auth server instance — user accounts and dashboard sessions.
+// better-auth server instance - user accounts and dashboard sessions.
 //
 // This is the human-facing half of auth (email + password, cookie sessions),
 // distinct from the machine-facing bearer keys in bearer-auth.ts that gate the

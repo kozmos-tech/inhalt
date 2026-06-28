@@ -6,17 +6,16 @@ backed by Postgres (via Prisma).
 ## Prerequisites
 
 - Node.js and npm
-- A Postgres database (Neon, local Postgres, or the Docker setup once available —
-  see [roadmap/self-host.md](roadmap/self-host.md))
+- A Postgres database (Neon, local Postgres, or the Docker setup once available -   see [roadmap/self-host.md](roadmap/self-host.md))
 
 ## Environment
 
 Copy `.env.example` to `.env` and fill in:
 
-- `DATABASE_URL` — Postgres connection string used by Prisma.
-- `BETTER_AUTH_SECRET` — secret for signing sessions. Generate with
+- `DATABASE_URL` - Postgres connection string used by Prisma.
+- `BETTER_AUTH_SECRET` - secret for signing sessions. Generate with
   `openssl rand -base64 32`.
-- `BETTER_AUTH_URL` — your app's origin, no trailing slash
+- `BETTER_AUTH_URL` - your app's origin, no trailing slash
   (`http://localhost:3000` in dev, `https://app.inhalt.tech` in production).
 
 ## Setup

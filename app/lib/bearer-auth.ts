@@ -2,7 +2,7 @@
 //
 // This is where tenancy is resolved for the MCP surface: the bearer secret in
 // the Authorization header identifies an ApiKey, which belongs to a Project.
-// (The management REST routes resolve their tenant differently — from the user's
+// (The management REST routes resolve their tenant differently - from the user's
 // session; see lib/project.ts.)
 
 import { prisma } from "./prisma"

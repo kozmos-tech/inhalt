@@ -3,7 +3,7 @@
 // Each function takes an already-resolved projectId plus arguments and returns
 // plain data (or throws an ApiError). The REST route handlers and the MCP tools
 // both call these, so there is exactly one implementation of "create an entry",
-// "publish an entry", etc. — the field engine (lib/fields) stays the single
+// "publish an entry", etc. - the field engine (lib/fields) stays the single
 // contract for what a write may contain.
 
 import { prisma } from "./prisma"

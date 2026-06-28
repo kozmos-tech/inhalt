@@ -1,7 +1,7 @@
 // Route guard (this Next build renames "middleware" to "proxy").
 //
 // An optimistic, cookie-only check: it never touches the database, so it stays
-// fast on every navigation. It only decides redirects — the authoritative check
+// fast on every navigation. It only decides redirects - the authoritative check
 // happens at the data source via requireSession() (app/lib/session.ts). Logged-in
 // users are bounced away from the auth pages; anonymous users are bounced to
 // /login when they reach the dashboard.
@@ -27,7 +27,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Run on app routes only — skip API (handled server-side), Next internals, and
+// Run on app routes only - skip API (handled server-side), Next internals, and
 // static assets so they aren't blocked by the redirects above.
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],

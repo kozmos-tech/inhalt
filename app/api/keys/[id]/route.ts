@@ -1,4 +1,4 @@
-// API keys — single item.
+// API keys - single item.
 //   DELETE /api/keys/:id    revoke (soft delete: sets revokedAt)
 //
 // Revoking is a soft delete so an audit trail and lastUsedAt survive. A revoked

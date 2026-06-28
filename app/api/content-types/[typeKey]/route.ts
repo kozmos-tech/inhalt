@@ -1,4 +1,4 @@
-// Content types — single item.
+// Content types - single item.
 //   GET    /api/content-types/:typeKey      fetch one
 //   PATCH  /api/content-types/:typeKey      update name / fields
 //   DELETE /api/content-types/:typeKey      remove (cascades to its entries)

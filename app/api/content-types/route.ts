@@ -1,4 +1,4 @@
-// Content types — collection.
+// Content types - collection.
 //   GET  /api/content-types        list every content type in the project
 //   POST /api/content-types        create one (its field definitions are validated)
 

@@ -1,4 +1,4 @@
-// Inhalt — content layer schema.
+// Inhalt - content layer schema.
 //
 // Two halves:
 //   - The content model: Project (the tenant boundary), ApiKey, ContentType,

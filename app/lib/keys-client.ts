@@ -3,7 +3,7 @@
 // These talk to the session-scoped /api/keys routes: the server resolves the
 // caller's workspace from their session cookie (see lib/project.ts), so every
 // call here only ever reads or mutates the signed-in user's own keys. This
-// replaces the old localStorage mock — keys created here are real and will
+// replaces the old localStorage mock - keys created here are real and will
 // authenticate against the MCP server.
 
 export type ApiKey = {

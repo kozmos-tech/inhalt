@@ -8,7 +8,7 @@ packaging to actually run it as a self-contained container does not exist yet.
 
 ### Container packaging
 No `Dockerfile` or `docker-compose.yml` in the repo. Add:
-- A production `Dockerfile` (build the Next app, run on the Node runtime — this
+- A production `Dockerfile` (build the Next app, run on the Node runtime - this
   build uses `proxy.ts`, not `middleware.ts`).
 - A `docker-compose.yml` that brings up the app + a Postgres instance for a
   one-command local/self-host start (bring-your-own DB via `DATABASE_URL`).

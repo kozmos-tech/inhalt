@@ -1,4 +1,4 @@
-// API keys — collection.
+// API keys - collection.
 //   GET  /api/keys    list active keys (never returns the hash or secret)
 //   POST /api/keys    create a key; the full secret is returned exactly ONCE
 

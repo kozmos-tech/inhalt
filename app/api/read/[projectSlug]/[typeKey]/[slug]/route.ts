@@ -1,4 +1,4 @@
-// Read API — one published entry (public).
+// Read API - one published entry (public).
 //   GET /api/read/:projectSlug/:typeKey/:slug
 //
 // Returns the published copy only. A draft-only entry (never published) is a 404
