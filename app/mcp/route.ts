@@ -78,7 +78,13 @@ async function run<T>(
 const typeKey = z.string().min(1)
 const name = z.string().min(1)
 const slug = z.string().min(1)
-const data = z.record(z.string(), z.unknown())
+const data = z
+  .record(z.string(), z.unknown())
+  .describe(
+    "Field values keyed by field key. A richtext field takes a string in that " +
+      "field's declared format (html by default; markdown or plaintext if set) - " +
+      "call schema.read to see each field's type and format before writing.",
+  )
 
 // --- tools ------------------------------------------------------------------
 
@@ -93,7 +99,7 @@ function registerTools(server: McpServer) {
     "schema.create",
     {
       description:
-        "Define a new content type. `fields` is an array of typed field definitions (string, richtext, reference, enum, list).",
+        "Define a new content type. `fields` is an array of typed field definitions (string, richtext, reference, enum, list). A richtext field takes an optional `format`: html (default), markdown, or plaintext.",
       inputSchema: { typeKey, name, fields: fieldsSchema },
     },
     // No per-type gate: the type does not exist yet, so creation is governed by

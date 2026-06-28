@@ -30,10 +30,12 @@ export function listContentTypes(projectId: string) {
 }
 
 // schema.read: the typed shape a client needs before it can write. Trimmed to
-// the fields that describe the model, not internal ids/timestamps.
+// the fields that describe the model, not internal ids/timestamps. Field defs are
+// re-parsed so declared defaults (e.g. a richtext field's `format`) are filled in,
+// letting a client see exactly what shape each field expects.
 export async function readSchema(projectId: string) {
   const types = await listContentTypes(projectId)
-  return types.map((t) => ({ key: t.key, name: t.name, fields: t.fields }))
+  return types.map((t) => ({ key: t.key, name: t.name, fields: fieldsSchema.parse(t.fields) }))
 }
 
 // --- content types: write ---------------------------------------------------

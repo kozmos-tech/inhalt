@@ -24,7 +24,7 @@ const prisma = new PrismaClient({ adapter })
 // it is trusted seed data.
 const postFields = [
   { key: "title", type: "string", required: true, maxLength: 120 },
-  { key: "body", type: "richtext", required: true },
+  { key: "body", type: "richtext", required: true, format: "html" },
   { key: "kind", type: "enum", options: ["news", "guide"] },
   { key: "tags", type: "list", of: "string" },
 ]

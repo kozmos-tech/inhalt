@@ -44,13 +44,21 @@ test("fieldsSchema defaults a list's `of` to string", () => {
   assert.equal(list.of, "string")
 })
 
+test("fieldsSchema defaults a richtext field's `format` to html", () => {
+  const [body] = fieldsSchema.parse([{ key: "body", type: "richtext" }]) as Extract<
+    FieldDef,
+    { type: "richtext" }
+  >[]
+  assert.equal(body.format, "html")
+})
+
 // --- compileFields: the schema entry values are checked against --------------
 
 // Only real field kinds: string/richtext/reference/enum/list. Scalars like number
 // exist only as a list's element type, never as a standalone field.
 const fields: FieldDef[] = [
   { key: "title", type: "string", required: true, maxLength: 5 },
-  { key: "body", type: "richtext" },
+  { key: "body", type: "richtext", format: "html" },
   { key: "author", type: "reference", to: "author" },
   { key: "status", type: "enum", options: ["draft", "live"] },
   { key: "scores", type: "list", of: "number" },

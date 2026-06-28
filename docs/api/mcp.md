@@ -97,12 +97,15 @@ be granted it deliberately. A tool call the key is not scoped for fails with
 - `name` - a content type's display name (`schema.create` / `schema.update`).
 - `fields` - an array of typed field definitions for `schema.create` /
   `schema.update`. Each field is `{ key, type, required? }` plus per-type extras.
-  The types are `string` (optional `maxLength`), `richtext`, `reference`
-  (`to`: a target `typeKey`), `enum` (`options`: string list), and `list`
-  (`of`: `string` | `number` | `boolean`).
+  The types are `string` (optional `maxLength`), `richtext` (optional `format`:
+  `html` (default), `markdown`, or `plaintext`), `reference` (`to`: a target
+  `typeKey`), `enum` (`options`: string list), and `list` (`of`: `string` |
+  `number` | `boolean`).
 - `slug` - the entry's slug.
 - `data` - an object of field values. It is validated against the content type;
-  unknown fields and wrong types are rejected.
+  unknown fields and wrong types are rejected. A `richtext` value is a string in
+  that field's declared `format` - call `schema.read` first to see each field's
+  type and format.
 - `status` - one of `DRAFT`, `PUBLISHED`, `ARCHIVED`.
 - `view` - `draft` or `published`.
 - `filters` - an object of field/value pairs for `entries.query`.
@@ -111,6 +114,21 @@ be granted it deliberately. A tool call the key is not scoped for fails with
 Editing a type's fields does not migrate existing entries. Stored values are only
 re-checked on the next write to that entry, so a removed or retyped field can
 leave older entries holding data that no longer matches the schema.
+
+## Rich text
+
+A `richtext` field stores a plain string. Its `format` declares the markup that
+string holds, so a writer knows what to send and a reader knows how to parse it:
+
+- `html` (default) - an HTML fragment, served back as-is.
+- `markdown` - Markdown source. The easiest shape to emit cleanly inside JSON.
+- `plaintext` - no markup.
+
+The format is not parsed or enforced - it is a contract, not a validator. Whatever
+the format, the value is one JSON string, so escape it like any other (`\n` for
+newlines, `\"` for quotes). HTML is the most quote-heavy to encode; if your client
+struggles to produce valid JSON for long HTML bodies, set the field's format to
+`markdown`. Call `schema.read` to see each field's format before writing.
 
 ## The draft and publish model
 

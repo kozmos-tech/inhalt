@@ -17,9 +17,19 @@ const baseField = {
 
 const scalar = z.enum(["string", "number", "boolean"])
 
+// A richtext value is always stored as a plain string; `format` only declares
+// which markup that string holds so a client knows what to write and a renderer
+// knows how to read it. It is metadata, not parsed or validated here. HTML is the
+// default because it is served as-is; markdown is the easier shape for a model to
+// emit cleanly inside JSON, and plaintext means no markup at all.
+const richtextFormat = z
+  .enum(["html", "markdown", "plaintext"])
+  .default("html")
+  .describe("Markup the richtext string holds: html (default), markdown, or plaintext.")
+
 const fieldDef = z.discriminatedUnion("type", [
   z.object({ ...baseField, type: z.literal("string"), maxLength: z.number().int().positive().optional() }),
-  z.object({ ...baseField, type: z.literal("richtext") }),
+  z.object({ ...baseField, type: z.literal("richtext"), format: richtextFormat }),
   z.object({ ...baseField, type: z.literal("reference"), to: z.string().min(1) }),
   z.object({ ...baseField, type: z.literal("enum"), options: z.array(z.string().min(1)).min(1) }),
   z.object({ ...baseField, type: z.literal("list"), of: scalar.default("string") }),
