@@ -57,7 +57,17 @@ export const auth = betterAuth({
   },
   // mcp() turns better-auth into an OAuth 2.0 server for MCP clients: discovery,
   // dynamic client registration, authorize/token, PKCE. Unauthenticated authorize
-  // requests bounce to loginPage, which resumes the flow after sign-in.
+  // requests bounce to loginPage, which resumes the flow after sign-in. Clients
+  // (Claude) send prompt=consent, so authorize needs a consent step - without a
+  // consentPage it 500s with "No consent page provided". consentPage points at
+  // our screen, which posts the user's choice to /api/auth/oauth2/consent.
   // nextCookies() must stay last so it can attach Set-Cookie headers.
-  plugins: [mcp({ loginPage: "/login", resource: mcpResource }), nextCookies()],
+  plugins: [
+    mcp({
+      loginPage: "/login",
+      resource: mcpResource,
+      oidcConfig: { loginPage: "/login", consentPage: "/oauth/consent" },
+    }),
+    nextCookies(),
+  ],
 })
