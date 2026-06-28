@@ -128,6 +128,23 @@ button:disabled {
   cursor: default;
 }
 
+/* An inline button that reads as a link, used mid-sentence. */
+button.linklike {
+  display: inline;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: inherit;
+  text-decoration: underline;
+}
+
+button.linklike:hover {
+  background: none;
+  opacity: 0.8;
+}
+
 button[type="submit"],
 button.primary {
   background: var(--accent);

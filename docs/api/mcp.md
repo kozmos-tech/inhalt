@@ -7,12 +7,34 @@ SDK.
 
 Endpoint: `https://app.inhalt.tech/mcp`
 
-Transport is Streamable HTTP. Every request must carry a bearer key.
+Transport is Streamable HTTP. Every request authenticates, either by signing in
+through your browser (OAuth) or with a bearer API key.
 
 ## Connecting
 
-Create an API key in the dashboard (the secret is shown once, copy it then), and
-add one block to your client's MCP config:
+There are two ways to authenticate. Pick whichever your client supports.
+
+### Sign in with your account (OAuth)
+
+Most MCP clients (Claude, Cursor, and others) can sign in through your browser.
+Give the client just the URL and it opens a login page, you approve it, and it
+gets access to your project. Nothing to copy or store.
+
+```json
+{
+  "mcpServers": {
+    "inhalt": {
+      "url": "https://app.inhalt.tech/mcp"
+    }
+  }
+}
+```
+
+### Connect with an API key
+
+For clients that cannot do the browser sign-in (most scripts and
+server-to-server callers), authenticate with a bearer key. Create an API key in
+the dashboard (the secret is shown once, copy it then) and add it to the config:
 
 ```json
 {
@@ -27,12 +49,14 @@ add one block to your client's MCP config:
 }
 ```
 
-The client reads your schema on connect, then sees the tools below.
+Either way, the client reads your schema on connect, then sees the tools below.
 
 ## Authentication and scopes
 
-The bearer key identifies your project and carries scopes that decide what it can
-do. A scope has two parts:
+Signing in grants the client full access to your project, the same as using the
+dashboard. An API key identifies your project too, but carries scopes that
+narrow what it can do, so it's the better choice when you want to limit a
+caller. A scope has two parts:
 
 - **actions** - which operations are allowed: `read`, `query`, `create`, `patch`,
   `publish`, `delete`, `schema:write` (create/edit content types), and
