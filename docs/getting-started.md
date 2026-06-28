@@ -2,16 +2,33 @@
 
 Connect an MCP client to Inhalt and start operating on content. No SDK.
 
-## 1. Get a bearer key
+## 1. Connect a client
 
-Sign in to the dashboard and create an API key. The full secret is shown **once**
-at creation - copy it then; it is never displayed again. The key authenticates your
-MCP client and carries the scopes it is allowed to use.
+There are two ways to authenticate. Pick whichever your client supports. See the
+[MCP API](api/mcp.md) for the full details on both.
 
-## 2. Connect the endpoint
+### Sign in with your account (recommended)
 
-Add one block to your MCP client's config, with your key in the `Authorization`
-header:
+Most MCP clients (Claude, Cursor, and others) can sign in through your browser.
+Give the client just the endpoint URL, approve the login page it opens, and it
+gets access to your project. Nothing to copy or store:
+
+```json
+{
+  "mcpServers": {
+    "inhalt": {
+      "url": "https://mcp.inhalt.tech"
+    }
+  }
+}
+```
+
+### Connect with an API key
+
+For clients that cannot do the browser sign-in (most scripts and server-to-server
+callers), use a bearer key. Sign in to the dashboard and create an API key. The
+full secret is shown **once** at creation - copy it then; it is never displayed
+again. Add it to the config in an `Authorization` header:
 
 ```json
 {
@@ -26,16 +43,16 @@ header:
 }
 ```
 
-Inhalt exposes your whole content tree as typed tools. The client reads your schema
-on connect.
+Either way, Inhalt exposes your whole content tree as typed tools, and the client
+reads your schema on connect.
 
-## 3. Operate on content
+## 2. Operate on content
 
 The client reads the schema, finds the right entry, and proposes a clean patch
 against real, typed fields - never freeform text. Every change is checked against
 your schema.
 
-## 4. Save and publish
+## 3. Save and publish
 
 Edits land as a **draft**. Publishing copies the draft to the published copy and
 pushes it to your live read API in one step. There is no version history: the model

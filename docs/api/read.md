@@ -73,6 +73,26 @@ Returns a single published entry.
 Returns `404` if the project, type, or slug does not exist, or if the entry has
 never been published.
 
+## Fetching from a site
+
+Responses are plain JSON, so any HTTP client works. A typical page fetches a list
+for an index and one entry for a detail page:
+
+```js
+const BASE = "https://mcp.inhalt.tech/api/read/acme-blog";
+
+// Index page: the latest posts in the "news" category.
+const { entries } = await fetch(`${BASE}/post?category=news&limit=10`)
+  .then((res) => res.json());
+
+// Detail page: one post by its slug.
+const post = await fetch(`${BASE}/post/hello-world`).then((res) => res.json());
+console.log(post.values.title); // "Hello world"
+```
+
+A `404` comes back as the error shape (see [API reference](README.md#error-shape)),
+so check `res.ok` before reading `values`.
+
 ## Notes
 
 - `values` holds the typed fields exactly as defined on the content type.

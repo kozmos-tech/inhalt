@@ -39,6 +39,8 @@ Inhalt works with every MCP client, including Claude, Cursor, VS Code, Zed, Wind
 ## Documentation
 
 - [Getting started](docs/getting-started.md) - connect an MCP client and operate on content.
+- [Concepts](docs/concepts.md) - projects, content types, entries, and the draft/publish model.
+- [API reference](docs/api/README.md) - the [Read API](docs/api/read.md) and [MCP API](docs/api/mcp.md).
 - [Development](docs/development.md) - run the repo locally, environment, and scripts.
 - [Code organization](docs/code-organization.md) - project layout and where new code goes.
 - [Copy & tone](docs/copy-style.md) - writing guidelines for product copy.
