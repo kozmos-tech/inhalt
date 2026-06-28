@@ -1,29 +1,36 @@
 "use client"
 
-import type { DashboardTab } from "../utils/types"
+import { useRouter } from "next/navigation"
+import { signOut } from "@/lib/auth/client"
+import { useDashboardTab } from "./dashboard-context"
 
 type DashboardTabsProps = {
-  tab: DashboardTab
-  onTabChange: (tab: DashboardTab) => void
   email: string
-  onSignOut: () => void
 }
 
-export function DashboardTabs({ tab, onTabChange, email, onSignOut }: DashboardTabsProps) {
+export function DashboardTabs({ email }: DashboardTabsProps) {
+  const router = useRouter()
+  const { tab, setTab } = useDashboardTab()
+
+  async function onSignOut() {
+    await signOut()
+    router.replace("/login")
+  }
+
   return (
     <div className="tabbar">
       <div role="tablist" aria-label="Dashboard sections">
         <button
           role="tab"
           aria-selected={tab === "connection"}
-          onClick={() => onTabChange("connection")}
+          onClick={() => setTab("connection")}
         >
           Connection
         </button>
         <button
           role="tab"
           aria-selected={tab === "keys"}
-          onClick={() => onTabChange("keys")}
+          onClick={() => setTab("keys")}
         >
           API keys
         </button>
