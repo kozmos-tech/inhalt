@@ -20,6 +20,7 @@ export function LandingHeader() {
           <a href="#how">How it works</a>
           <a href="#features">Features</a>
           <a href="#open">Open source</a>
+          <Link href="/docs">Docs</Link>
         </nav>
         <div className="lp-header-actions">
           <Link href="/login" className="lp-quiet-link">
