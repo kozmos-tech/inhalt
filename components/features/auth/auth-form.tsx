@@ -4,14 +4,16 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { signIn, signUp } from "@/lib/auth/client"
+import { Spinner } from "@/components/ui/spinner"
 
 type Mode = "signin" | "signup"
 
 const copy = {
   signin: {
-    title: "Sign in to Inhalt",
-    subtitle: "Welcome back. Connect your content layer.",
+    title: "Welcome back",
+    subtitle: "Sign in to connect your content layer.",
     action: "Sign in",
+    pendingAction: "Signing in",
     passwordHint: "current-password",
     footer: "New to Inhalt?",
     footerLink: "Create an account",
@@ -19,8 +21,9 @@ const copy = {
   },
   signup: {
     title: "Create your account",
-    subtitle: "Stand up a content layer your AI tools can run.",
+    subtitle: "Stand up a content layer in one step.",
     action: "Create account",
+    pendingAction: "Creating account",
     passwordHint: "new-password",
     footer: "Already have an account?",
     footerLink: "Sign in",
@@ -70,50 +73,53 @@ export function AuthForm({ mode }: { mode: Mode }) {
   }
 
   return (
-    <div>
+    <div className="auth-card">
       <h2>{t.title}</h2>
       <p>{t.subtitle}</p>
 
-      <form onSubmit={onSubmit}>
-        <p>
+      <form onSubmit={onSubmit} noValidate>
+        <div className="field">
           <label htmlFor="email">Email</label>
-          <br />
           <input
             id="email"
+            name="email"
             type="email"
             autoComplete="email"
+            autoFocus
             placeholder="you@company.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </p>
+        </div>
 
-        <p>
+        <div className="field">
           <label htmlFor="password">Password</label>
-          <br />
           <input
             id="password"
+            name="password"
             type="password"
             autoComplete={t.passwordHint}
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </p>
+        </div>
 
-        {error && (
-          <p role="alert">
-            <strong>{error}</strong>
-          </p>
-        )}
+        {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <p>
-          <button type="submit" disabled={pending}>
-            {pending ? "…" : t.action}
-          </button>
-        </p>
+        <button type="submit" disabled={pending}>
+          {pending ? (
+            <span className="btn-busy">
+              <Spinner />
+              {t.pendingAction}
+            </span>
+          ) : (
+            t.action
+          )}
+        </button>
       </form>
 
-      <p>
+      <p className="auth-foot">
         {t.footer} <Link href={t.footerHref}>{t.footerLink}</Link>
       </p>
     </div>

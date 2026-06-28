@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Spinner } from "@/components/ui/spinner"
 
 // Friendly labels for the OAuth scopes better-auth advertises. Anything we don't
 // recognize falls back to its raw name so a new scope is still shown, not hidden.
@@ -60,7 +61,7 @@ export function ConsentForm({
   }
 
   return (
-    <div>
+    <div className="auth-card">
       <h2>Authorize access</h2>
       <p>
         An MCP client wants to connect to your Inhalt content. Approving lets it
@@ -68,36 +69,39 @@ export function ConsentForm({
       </p>
 
       {scopes.length > 0 && (
-        <ul>
+        <ul className="auth-scopes">
           {scopes.map((s) => (
             <li key={s}>{SCOPE_LABELS[s] ?? s}</li>
           ))}
         </ul>
       )}
 
-      {error && (
-        <p role="alert">
-          <strong>{error}</strong>
-        </p>
-      )}
+      {error && <p className="auth-error" role="alert">{error}</p>}
 
-      <p>
-        <button type="button" onClick={() => decide(false)} disabled={pending || !consentCode}>
-          Deny
-        </button>{" "}
+      <div className="auth-actions">
         <button
           type="button"
           className="primary"
           onClick={() => decide(true)}
           disabled={pending || !consentCode}
         >
-          {pending ? "…" : "Approve"}
+          {pending ? (
+            <span className="btn-busy">
+              <Spinner />
+              Approving
+            </span>
+          ) : (
+            "Approve"
+          )}
         </button>
-      </p>
+        <button type="button" onClick={() => decide(false)} disabled={pending || !consentCode}>
+          Deny
+        </button>
+      </div>
 
       {!consentCode && (
-        <p role="alert">
-          <strong>This link is missing its consent code. Start the connection from your client again.</strong>
+        <p className="auth-error" role="alert">
+          This link is missing its consent code. Start the connection from your client again.
         </p>
       )}
     </div>

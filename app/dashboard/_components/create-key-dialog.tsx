@@ -1,6 +1,7 @@
 "use client"
 
 import type { FormEvent, Ref } from "react"
+import { Spinner } from "@/components/ui/spinner"
 
 type CreateKeyDialogProps = {
   ref: Ref<HTMLDialogElement>
@@ -44,7 +45,14 @@ export function CreateKeyDialog({
             Cancel
           </button>
           <button type="submit" className="primary" disabled={busy}>
-            {busy ? "Creating..." : "Create key"}
+            {busy ? (
+              <span className="btn-busy">
+                <Spinner />
+                Creating
+              </span>
+            ) : (
+              "Create key"
+            )}
           </button>
         </div>
       </form>
