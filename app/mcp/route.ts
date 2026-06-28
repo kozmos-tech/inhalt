@@ -1,7 +1,8 @@
 // Inhalt MCP server.
 //
-// The protocol IS the API: this exposes the content layer as eight typed
-// tools, one per content operation. Transport is Streamable HTTP (stateless,
+// The protocol IS the API: this exposes the content layer as typed tools, one
+// per content operation - reading and writing both entries and the schema that
+// types them. Transport is Streamable HTTP (stateless,
 // no Redis) via mcp-handler; every request authenticates with either an OAuth
 // access token (interactive clients) or a bearer ApiKey (scripts), and every
 // tool is gated by the caller's scopes. The tools themselves are thin - // they resolve auth + scope, then delegate to lib/operations, which is the
@@ -19,6 +20,7 @@ import { auth } from "@/lib/auth/server"
 import { prisma } from "@/lib/prisma"
 import { authenticateBearer } from "@/lib/auth/bearer"
 import { parseScopes, assertScope, type ScopeAction, type Scopes } from "@/lib/keys/scopes"
+import { fieldsSchema } from "@/lib/content/fields"
 import * as ops from "@/lib/content/operations"
 
 // Prisma + node:crypto run server-side only.
@@ -74,6 +76,7 @@ async function run<T>(
 // --- shared input fragments -------------------------------------------------
 
 const typeKey = z.string().min(1)
+const name = z.string().min(1)
 const slug = z.string().min(1)
 const data = z.record(z.string(), z.unknown())
 
@@ -84,6 +87,42 @@ function registerTools(server: McpServer) {
     "schema.read",
     { description: "List the project's content types and their typed field definitions.", inputSchema: {} },
     async (_args, extra: Extra) => run(extra, "read", undefined, (p) => ops.readSchema(p)),
+  )
+
+  server.registerTool(
+    "schema.create",
+    {
+      description:
+        "Define a new content type. `fields` is an array of typed field definitions (string, richtext, reference, enum, list).",
+      inputSchema: { typeKey, name, fields: fieldsSchema },
+    },
+    // No per-type gate: the type does not exist yet, so creation is governed by
+    // the schema:write action alone.
+    async (args, extra: Extra) =>
+      run(extra, "schema:write", undefined, (p) => ops.createSchema(p, args.typeKey, args.name, args.fields)),
+  )
+
+  server.registerTool(
+    "schema.update",
+    {
+      description:
+        "Update a content type's name and/or fields. The key is immutable. Editing fields does not migrate existing entries.",
+      inputSchema: { typeKey, name: name.optional(), fields: fieldsSchema.optional() },
+    },
+    async (args, extra: Extra) =>
+      run(extra, "schema:write", args.typeKey, (p) =>
+        ops.updateSchema(p, args.typeKey, { name: args.name, fields: args.fields }),
+      ),
+  )
+
+  server.registerTool(
+    "schema.delete",
+    {
+      description: "Delete a content type. This permanently removes the type and every entry it holds.",
+      inputSchema: { typeKey },
+    },
+    async (args, extra: Extra) =>
+      run(extra, "schema:delete", args.typeKey, (p) => ops.deleteSchema(p, args.typeKey)),
   )
 
   server.registerTool(
@@ -179,7 +218,7 @@ const handler = createMcpHandler(
 // their own project. Minted API keys keep their finer-grained per-key scopes.
 const FULL_SCOPES: Scopes = {
   contentTypes: ["*"],
-  actions: ["read", "query", "create", "patch", "publish", "delete"],
+  actions: ["read", "query", "create", "patch", "publish", "delete", "schema:write", "schema:delete"],
 }
 
 // The project an authenticated user owns. Mirrors lib/project.ts's resolution

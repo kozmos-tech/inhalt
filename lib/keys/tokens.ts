@@ -6,11 +6,13 @@
 
 import { createHash, randomBytes } from "node:crypto"
 
-// Default grant for a freshly created key: every content type, every action.
+// Default grant for a freshly created key: every content type, every entry
+// action, plus schema authoring. `schema:delete` is deliberately omitted - it
+// drops a type and all its entries, so a key must be granted it explicitly.
 // Scopes are stored as JSON on ApiKey and narrowed per key later.
 export const DEFAULT_SCOPES = {
   contentTypes: ["*"],
-  actions: ["read", "query", "create", "patch", "publish", "delete"],
+  actions: ["read", "query", "create", "patch", "publish", "delete", "schema:write"],
 } as const
 
 export function hashSecret(secret: string): string {

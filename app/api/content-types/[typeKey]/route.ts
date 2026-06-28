@@ -4,15 +4,15 @@
 //   DELETE /api/content-types/:typeKey      remove (cascades to its entries)
 
 import { z } from "zod"
-import { prisma } from "@/lib/prisma"
 import { getProject } from "@/lib/project"
 import { handle, json } from "@/lib/http"
 import { fieldsSchema } from "@/lib/content/fields"
 import { requireContentType } from "@/lib/content/lookup"
+import * as ops from "@/lib/content/operations"
 
 type Params = { params: Promise<{ typeKey: string }> }
 
-const patchSchema = z
+const patchBody = z
   .object({
     name: z.string().min(1).optional(),
     fields: fieldsSchema.optional(),
@@ -34,17 +34,9 @@ export async function PATCH(request: Request, { params }: Params) {
   return handle(async () => {
     const { typeKey } = await params
     const project = await getProject()
-    const contentType = await requireContentType(project.id, typeKey)
-    const body = patchSchema.parse(await request.json())
-
-    const updated = await prisma.contentType.update({
-      where: { id: contentType.id },
-      data: {
-        ...(body.name !== undefined ? { name: body.name } : {}),
-        ...(body.fields !== undefined ? { fields: body.fields } : {}),
-      },
-    })
-    return json({ contentType: updated })
+    const body = patchBody.parse(await request.json())
+    const contentType = await ops.updateSchema(project.id, typeKey, body)
+    return json({ contentType })
   })
 }
 
@@ -52,8 +44,7 @@ export async function DELETE(_request: Request, { params }: Params) {
   return handle(async () => {
     const { typeKey } = await params
     const project = await getProject()
-    const contentType = await requireContentType(project.id, typeKey)
-    await prisma.contentType.delete({ where: { id: contentType.id } })
+    await ops.deleteSchema(project.id, typeKey)
     return json({ deleted: true })
   })
 }

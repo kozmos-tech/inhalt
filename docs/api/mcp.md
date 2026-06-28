@@ -35,17 +35,21 @@ The bearer key identifies your project and carries scopes that decide what it ca
 do. A scope has two parts:
 
 - **actions** - which operations are allowed: `read`, `query`, `create`, `patch`,
-  `publish`, `delete`.
+  `publish`, `delete`, `schema:write` (create/edit content types), and
+  `schema:delete` (drop a content type).
 - **content types** - which types the key may touch. `*` means all types.
 
-Freshly created keys are granted every action on every content type. A tool call
-the key is not scoped for fails with `forbidden`.
+Freshly created keys are granted every action except `schema:delete` on every
+content type. `schema:delete` cascades to every entry of the type, so a key must
+be granted it deliberately. A tool call the key is not scoped for fails with
+`forbidden`.
 
 ## Tools
 
+### Entries
+
 | Tool | Action | Description |
 |------|--------|-------------|
-| `schema.read`    | read    | List the project's content types and their field definitions. |
 | `entries.list`   | read    | List entries of a type. Optional `status` filter and paging. |
 | `entries.query`  | query   | Find entries whose fields match given values (matched against the draft). |
 | `entries.get`    | read    | Fetch one entry by slug. `view` picks `draft` (default) or `published`. |
@@ -54,9 +58,24 @@ the key is not scoped for fails with `forbidden`.
 | `entries.publish`| publish | Copy an entry's draft to its published copy (served by the Read API). |
 | `entries.delete` | delete  | Delete an entry permanently. |
 
+### Schema
+
+| Tool | Action | Description |
+|------|--------|-------------|
+| `schema.read`   | read         | List the project's content types and their field definitions. |
+| `schema.create` | schema:write | Define a new content type from a set of typed fields. |
+| `schema.update` | schema:write | Change a type's name and/or fields. The key is immutable. |
+| `schema.delete` | schema:delete| Delete a content type and every entry it holds. |
+
 ### Inputs
 
 - `typeKey` - the content type's key, e.g. `post`.
+- `name` - a content type's display name (`schema.create` / `schema.update`).
+- `fields` - an array of typed field definitions for `schema.create` /
+  `schema.update`. Each field is `{ key, type, required? }` plus per-type extras.
+  The types are `string` (optional `maxLength`), `richtext`, `reference`
+  (`to`: a target `typeKey`), `enum` (`options`: string list), and `list`
+  (`of`: `string` | `number` | `boolean`).
 - `slug` - the entry's slug.
 - `data` - an object of field values. It is validated against the content type;
   unknown fields and wrong types are rejected.
@@ -64,6 +83,10 @@ the key is not scoped for fails with `forbidden`.
 - `view` - `draft` or `published`.
 - `filters` - an object of field/value pairs for `entries.query`.
 - `limit` / `offset` - paging.
+
+Editing a type's fields does not migrate existing entries. Stored values are only
+re-checked on the next write to that entry, so a removed or retyped field can
+leave older entries holding data that no longer matches the schema.
 
 ## The draft and publish model
 

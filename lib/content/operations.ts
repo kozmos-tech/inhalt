@@ -9,12 +9,18 @@
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/app/generated/prisma/client"
 import { ApiError } from "@/lib/http"
-import { validateEntry } from "@/lib/content/fields"
+import { validateEntry, fieldsSchema } from "@/lib/content/fields"
 import { requireContentType, requireEntry } from "@/lib/content/lookup"
 
 const MAX_LIMIT = 200
 
-// --- content types ----------------------------------------------------------
+// Prisma reports a unique-constraint break as P2002; we translate it into a
+// clean 409 so both transports get a useful message instead of a generic 500.
+function isUniqueViolation(error: unknown): boolean {
+  return typeof error === "object" && error !== null && (error as { code?: unknown }).code === "P2002"
+}
+
+// --- content types: read ----------------------------------------------------
 
 export function listContentTypes(projectId: string) {
   return prisma.contentType.findMany({
@@ -28,6 +34,56 @@ export function listContentTypes(projectId: string) {
 export async function readSchema(projectId: string) {
   const types = await listContentTypes(projectId)
   return types.map((t) => ({ key: t.key, name: t.name, fields: t.fields }))
+}
+
+// --- content types: write ---------------------------------------------------
+
+// schema.create: define a new content type. Field definitions are validated by
+// the same engine that guards entry writes, so a type can never be born with a
+// malformed schema. A duplicate key surfaces as a 409.
+export async function createSchema(projectId: string, key: string, name: string, fields: unknown) {
+  const parsed = fieldsSchema.parse(fields)
+  try {
+    return await prisma.contentType.create({
+      data: { projectId, key, name, fields: parsed as Prisma.InputJsonValue },
+    })
+  } catch (error) {
+    if (isUniqueViolation(error)) {
+      throw new ApiError(409, "conflict", `A content type with key "${key}" already exists.`)
+    }
+    throw error
+  }
+}
+
+// schema.update: change a content type's display name and/or its field set. The
+// key stays immutable (it addresses the type and its entries). At least one of
+// name/fields must be given. Note: editing fields does not migrate existing
+// entry data - stored values are only re-checked on the next entry write.
+export async function updateSchema(
+  projectId: string,
+  typeKey: string,
+  patch: { name?: string; fields?: unknown },
+) {
+  const contentType = await requireContentType(projectId, typeKey)
+  if (patch.name === undefined && patch.fields === undefined) {
+    throw new ApiError(400, "bad_request", "Provide at least one of `name` or `fields`.")
+  }
+  const fields = patch.fields !== undefined ? fieldsSchema.parse(patch.fields) : undefined
+  return prisma.contentType.update({
+    where: { id: contentType.id },
+    data: {
+      ...(patch.name !== undefined ? { name: patch.name } : {}),
+      ...(fields !== undefined ? { fields: fields as Prisma.InputJsonValue } : {}),
+    },
+  })
+}
+
+// schema.delete: remove a content type. Postgres cascades to its entries, so
+// this is destructive - it is gated behind its own scope.
+export async function deleteSchema(projectId: string, typeKey: string) {
+  const contentType = await requireContentType(projectId, typeKey)
+  await prisma.contentType.delete({ where: { id: contentType.id } })
+  return { deleted: true, key: typeKey }
 }
 
 // --- entries: read ----------------------------------------------------------

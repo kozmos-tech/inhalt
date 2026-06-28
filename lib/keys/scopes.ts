@@ -13,7 +13,18 @@ export type Scopes = {
   actions: string[]
 }
 
-export type ScopeAction = "read" | "query" | "create" | "patch" | "publish" | "delete"
+// Entry actions plus the structural schema actions. `schema:write` covers
+// creating and editing content types; `schema:delete` is split out because
+// dropping a type cascades to every entry, so it is granted only deliberately.
+export type ScopeAction =
+  | "read"
+  | "query"
+  | "create"
+  | "patch"
+  | "publish"
+  | "delete"
+  | "schema:write"
+  | "schema:delete"
 
 // Narrow the JSON stored on ApiKey.scopes into the shape we rely on, tolerating
 // a malformed value by denying everything rather than throwing.
