@@ -2,6 +2,7 @@
 
 import type { Ref } from "react"
 import { useClipboard } from "@/lib/hooks/use-clipboard"
+import { Button } from "@/components/ui/button"
 import { KEY_CONFIG } from "../utils/constants"
 
 type KeyConfigDialogProps = {
@@ -25,16 +26,14 @@ export function KeyConfigDialog({ ref, onClose }: KeyConfigDialogProps) {
       <div className="config-block">
         <div className="config-head">
           <span>mcp.json</span>
-          <button type="button" onClick={() => copy(KEY_CONFIG, "key")}>
+          <Button onClick={() => copy(KEY_CONFIG, "key")}>
             {copied === "key" ? "Copied" : "Copy"}
-          </button>
+          </Button>
         </div>
         <pre>{KEY_CONFIG}</pre>
       </div>
       <div className="dialog-actions">
-        <button type="button" onClick={onClose}>
-          Done
-        </button>
+        <Button onClick={onClose}>Done</Button>
       </div>
     </dialog>
   )

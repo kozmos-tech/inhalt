@@ -1,6 +1,8 @@
 "use client"
 
 import type { FormEvent, Ref } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 
 type CreateKeyDialogProps = {
@@ -26,10 +28,10 @@ export function CreateKeyDialog({
     <dialog ref={ref} onClose={onCancel}>
       <form onSubmit={onSubmit}>
         <h2>Create API key</h2>
-        <p>Give the key a name so you can recognize it later.</p>
-        <label htmlFor="key-name">Name</label>
-        <input
+        <Input
           id="key-name"
+          label="Name"
+          hint="Give the key a name so you can recognize it later."
           autoFocus
           value={newName}
           onChange={(e) => onNewNameChange(e.target.value)}
@@ -41,10 +43,8 @@ export function CreateKeyDialog({
           </p>
         )}
         <div className="dialog-actions">
-          <button type="button" onClick={onCancel}>
-            Cancel
-          </button>
-          <button type="submit" className="primary" disabled={busy}>
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button type="submit" variant="primary" disabled={busy}>
             {busy ? (
               <span className="btn-busy">
                 <Spinner />
@@ -53,7 +53,7 @@ export function CreateKeyDialog({
             ) : (
               "Create key"
             )}
-          </button>
+          </Button>
         </div>
       </form>
     </dialog>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useClipboard } from "@/lib/hooks/use-clipboard"
+import { Button } from "@/components/ui/button"
 import { ENDPOINT, OAUTH_CONFIG } from "../utils/constants"
 import { KeyConfigDialog } from "./key-config-dialog"
 
@@ -26,28 +27,34 @@ export function ConnectionPanel() {
 
       <h3>Endpoint</h3>
       <div className="copy-row">
-        <code>{ENDPOINT}</code>
-        <button type="button" onClick={() => copy(ENDPOINT, "endpoint")}>
+        <input
+          className="copy-field"
+          readOnly
+          value={ENDPOINT}
+          aria-label="MCP endpoint"
+          onFocus={(e) => e.currentTarget.select()}
+        />
+        <Button onClick={() => copy(ENDPOINT, "endpoint")}>
           {copied === "endpoint" ? "Copied" : "Copy"}
-        </button>
+        </Button>
       </div>
 
       <h3>Client configuration</h3>
       <div className="config-block">
         <div className="config-head">
           <span>mcp.json</span>
-          <button type="button" onClick={() => copy(OAUTH_CONFIG, "config")}>
+          <Button onClick={() => copy(OAUTH_CONFIG, "config")}>
             {copied === "config" ? "Copied" : "Copy"}
-          </button>
+          </Button>
         </div>
         <pre>{OAUTH_CONFIG}</pre>
       </div>
 
       <p>
         Using a client that can't sign in through the browser?{" "}
-        <button type="button" className="linklike" onClick={() => setShowKey(true)}>
+        <Button variant="link" onClick={() => setShowKey(true)}>
           Connect with an API key
-        </button>
+        </Button>
         .
       </p>
 

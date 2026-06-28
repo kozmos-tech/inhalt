@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 
 // Friendly labels for the OAuth scopes better-auth advertises. Anything we don't
@@ -79,9 +80,8 @@ export function ConsentForm({
       {error && <p className="auth-error" role="alert">{error}</p>}
 
       <div className="auth-actions">
-        <button
-          type="button"
-          className="primary"
+        <Button
+          variant="primary"
           onClick={() => decide(true)}
           disabled={pending || !consentCode}
         >
@@ -93,10 +93,10 @@ export function ConsentForm({
           ) : (
             "Approve"
           )}
-        </button>
-        <button type="button" onClick={() => decide(false)} disabled={pending || !consentCode}>
+        </Button>
+        <Button onClick={() => decide(false)} disabled={pending || !consentCode}>
           Deny
-        </button>
+        </Button>
       </div>
 
       {!consentCode && (

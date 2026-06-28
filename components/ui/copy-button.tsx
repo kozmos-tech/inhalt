@@ -1,6 +1,7 @@
 "use client"
 
 import { useClipboard } from "@/lib/hooks/use-clipboard"
+import { Button } from "./button"
 import { CheckIcon, CopyIcon } from "./icons"
 
 type CopyButtonProps = {
@@ -14,8 +15,7 @@ export function CopyButton({ value, label, className = "" }: CopyButtonProps) {
   const isCopied = copied !== null
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={() => copy(value)}
       aria-label={label ? undefined : "Copy"}
       className={
@@ -25,6 +25,6 @@ export function CopyButton({ value, label, className = "" }: CopyButtonProps) {
     >
       {isCopied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
       {label ? <span>{isCopied ? "Copied" : label}</span> : null}
-    </button>
+    </Button>
   )
 }

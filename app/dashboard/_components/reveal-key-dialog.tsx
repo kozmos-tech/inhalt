@@ -2,6 +2,7 @@
 
 import type { Ref } from "react"
 import { useClipboard } from "@/lib/hooks/use-clipboard"
+import { Button } from "@/components/ui/button"
 
 type RevealKeyDialogProps = {
   ref: Ref<HTMLDialogElement>
@@ -20,19 +21,19 @@ export function RevealKeyDialog({ ref, secret, onClose }: RevealKeyDialogProps) 
         be shown again.
       </p>
       <div className="key-reveal">
-        <code>{secret}</code>
+        <input
+          className="copy-field"
+          readOnly
+          value={secret ?? ""}
+          aria-label="Your new API key"
+          onFocus={(e) => e.currentTarget.select()}
+        />
       </div>
       <div className="dialog-actions">
-        <button
-          type="button"
-          className="primary"
-          onClick={() => secret && copy(secret)}
-        >
+        <Button variant="primary" onClick={() => secret && copy(secret)}>
           {copied ? "Copied" : "Copy key"}
-        </button>
-        <button type="button" onClick={onClose}>
-          Done
-        </button>
+        </Button>
+        <Button onClick={onClose}>Done</Button>
       </div>
     </dialog>
   )

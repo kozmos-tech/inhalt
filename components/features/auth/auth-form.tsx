@@ -4,6 +4,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { signIn, signUp } from "@/lib/auth/client"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 
 type Mode = "signin" | "signup"
@@ -78,36 +80,34 @@ export function AuthForm({ mode }: { mode: Mode }) {
       <p>{t.subtitle}</p>
 
       <form onSubmit={onSubmit} noValidate>
-        <div className="field">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            autoFocus
-            placeholder="you@company.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
+          required
+          autoComplete="email"
+          autoFocus
+          placeholder="you@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete={t.passwordHint}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+          required
+          autoComplete={t.passwordHint}
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
         {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <button type="submit" disabled={pending}>
+        <Button type="submit" variant="primary" disabled={pending}>
           {pending ? (
             <span className="btn-busy">
               <Spinner />
@@ -116,7 +116,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           ) : (
             t.action
           )}
-        </button>
+        </Button>
       </form>
 
       <p className="auth-foot">
@@ -125,3 +125,5 @@ export function AuthForm({ mode }: { mode: Mode }) {
     </div>
   )
 }
+
+

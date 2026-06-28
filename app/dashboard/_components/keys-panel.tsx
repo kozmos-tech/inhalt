@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { createKey, listKeys, revokeKey, type ApiKey } from "@/lib/keys/client"
+import { Button } from "@/components/ui/button"
 import { CreateKeyDialog } from "./create-key-dialog"
 import { RevealKeyDialog } from "./reveal-key-dialog"
 import { formatDate } from "../utils/format"
@@ -101,9 +102,9 @@ export function KeysPanel({ initialKeys, initialError }: KeysPanelProps) {
           Each MCP client authenticates with its own key. The secret is shown
           once, right after you create it.
         </p>
-        <button type="button" className="primary" onClick={openCreate}>
+        <Button variant="primary" onClick={openCreate}>
           Create new key
-        </button>
+        </Button>
       </div>
 
       {panelError && (
@@ -135,9 +136,7 @@ export function KeysPanel({ initialKeys, initialError }: KeysPanelProps) {
                 </td>
                 <td>{formatDate(key.createdAt)}</td>
                 <td className="row-action">
-                  <button type="button" onClick={() => onRevoke(key.id)}>
-                    Revoke
-                  </button>
+                  <Button onClick={() => onRevoke(key.id)}>Revoke</Button>
                 </td>
               </tr>
             ))}

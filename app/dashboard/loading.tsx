@@ -1,17 +1,19 @@
 // Shown by Suspense while the dashboard page resolves the session and loads the
 // project's keys on the server. Mirrors the real layout's tabbar so the shell is
 // stable and only the content area swaps in once the data arrives.
+import { Button } from "@/components/ui/button"
+
 export default function DashboardLoading() {
   return (
     <main>
       <div className="tabbar">
         <div role="tablist" aria-label="Dashboard sections">
-          <button role="tab" aria-selected="true" disabled>
+          <Button role="tab" aria-selected="true" disabled>
             Connection
-          </button>
-          <button role="tab" aria-selected="false" disabled>
+          </Button>
+          <Button role="tab" aria-selected="false" disabled>
             API keys
-          </button>
+          </Button>
         </div>
         <div className="user">
           <span aria-hidden>&nbsp;</span>

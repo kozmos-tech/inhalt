@@ -86,17 +86,24 @@ label {
 
 input {
   font: inherit;
-  padding: 0.5rem 0.65rem;
+  padding: 0.55rem 0.75rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 10px;
   background: var(--surface);
   color: var(--text);
   outline: none;
+  box-shadow: 0 1px 2px rgba(22, 22, 26, 0.06);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+input::placeholder {
+  color: var(--muted);
 }
 
 input:focus {
   border-color: rgba(22, 22, 26, 0.35);
-  box-shadow: 0 0 0 3px rgba(22, 22, 26, 0.05);
+  box-shadow: 0 1px 2px rgba(22, 22, 26, 0.06),
+    0 0 0 3px rgba(22, 22, 26, 0.06);
 }
 
 input[type="email"],
@@ -112,7 +119,7 @@ button {
   cursor: pointer;
   padding: 0.45rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 9px;
   background: var(--surface);
   color: var(--text);
   transition: background 0.12s ease, border-color 0.12s ease,
@@ -147,6 +154,12 @@ button.linklike:hover {
 
 button[type="submit"],
 button.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 13px;
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
@@ -267,26 +280,23 @@ td button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0.35rem 0.35rem 0.85rem;
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
   margin-bottom: 0.5rem;
-}
-
-.copy-row code {
-  flex: 1;
-  min-width: 0;
-  background: none;
-  padding: 0;
-  overflow-x: auto;
-  white-space: nowrap;
 }
 
 .copy-row button {
   flex-shrink: 0;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
+}
+
+/* A read-only input that shows a value to copy (an endpoint URL, an API key).
+   Shares the rounded, shadowed input look; the monospace makes the value
+   legible character by character. */
+.copy-field {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  font-size: 0.9rem;
 }
 
 .config-block {
@@ -357,19 +367,7 @@ dialog input {
 }
 
 .key-reveal {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.9rem 1rem;
   margin: 0.5rem 0 0;
-  word-break: break-all;
-}
-
-.key-reveal code {
-  background: none;
-  padding: 0;
-  font-size: 0.95rem;
-  color: var(--text);
 }
 
 pre {
@@ -483,7 +481,24 @@ pre code {
   display: block;
   width: 100%;
   max-width: none;
-  padding: 0.6rem 0.7rem;
+}
+
+/* Red required marker after a field label, e.g. "Your email *". */
+.req {
+  color: #e5484d;
+}
+
+/* The muted helper line under a field, e.g. "We won't share your email". */
+.field-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.field-error {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: #b00020;
 }
 
 /* Full-width primary action, tall enough to be a comfortable tap target. */

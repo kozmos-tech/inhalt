@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { signOut } from "@/lib/auth/client"
+import { Button } from "@/components/ui/button"
 import { useDashboardTab } from "./dashboard-context"
 
 type DashboardTabsProps = {
@@ -20,26 +21,24 @@ export function DashboardTabs({ email }: DashboardTabsProps) {
   return (
     <div className="tabbar">
       <div role="tablist" aria-label="Dashboard sections">
-        <button
+        <Button
           role="tab"
           aria-selected={tab === "connection"}
           onClick={() => setTab("connection")}
         >
           Connection
-        </button>
-        <button
+        </Button>
+        <Button
           role="tab"
           aria-selected={tab === "keys"}
           onClick={() => setTab("keys")}
         >
           API keys
-        </button>
+        </Button>
       </div>
       <div className="user">
         <span>{email}</span>
-        <button type="button" onClick={onSignOut}>
-          Sign out
-        </button>
+        <Button onClick={onSignOut}>Sign out</Button>
       </div>
     </div>
   )
