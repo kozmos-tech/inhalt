@@ -45,7 +45,8 @@ export default function DashboardPage() {
     else if (!revealed?.secret && d.open) d.close()
   }, [revealed])
 
-  const email = session?.user?.email ?? "guest@inhalt.tech"
+  const email =
+    session?.user?.email ?? ""
 
   const refresh = useCallback(async () => {
     try {

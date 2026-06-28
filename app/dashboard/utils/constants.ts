@@ -1,6 +1,7 @@
 // Static connection details rendered on the dashboard's Connection tab.
 
-export const ENDPOINT = "https://app.inhalt.tech/mcp"
+// Inlined at build time from .env (NEXT_PUBLIC_ so it reaches the client bundle).
+export const ENDPOINT = process.env.NEXT_PUBLIC_MCP_ENDPOINT ?? ""
 
 export const CONFIG = `{
   "mcpServers": {
