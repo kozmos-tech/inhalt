@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { ArrowRightIcon, GithubIcon } from "@/components/ui/icons"
 import { GITHUB_URL } from "../utils/constants"
+import { GetStartedButton } from "./get-started-button"
 
 // MIT-licensed closing section with source and get-started CTAs.
 export function OpenSourceSection() {
@@ -20,10 +20,10 @@ export function OpenSourceSection() {
               <GithubIcon size={16} />
               Read the source
             </a>
-            <Link href="/signup" className="lp-btn lp-btn-primary lp-btn-lg">
+            <GetStartedButton className="lp-btn lp-btn-primary lp-btn-lg">
               Get started
               <ArrowRightIcon size={16} />
-            </Link>
+            </GetStartedButton>
           </div>
         </div>
       </div>

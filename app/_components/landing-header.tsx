@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { GetStartedButton } from "./get-started-button"
 
 // Sticky top bar: wordmark, in-page nav, and sign-in / get-started actions.
 export function LandingHeader() {
@@ -24,9 +25,9 @@ export function LandingHeader() {
           <Link href="/login" className="lp-quiet-link">
             Sign in
           </Link>
-          <Link href="/signup" className="lp-btn lp-btn-primary lp-btn-sm">
+          <GetStartedButton className="lp-btn lp-btn-primary lp-btn-sm">
             Get started
-          </Link>
+          </GetStartedButton>
         </div>
       </div>
     </header>
