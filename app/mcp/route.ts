@@ -2,8 +2,9 @@
 //
 // The protocol IS the API: this exposes the content layer as eight typed
 // tools, one per content operation. Transport is Streamable HTTP (stateless,
-// no Redis) via mcp-handler; every request authenticates a bearer ApiKey and
-// every tool is gated by that key's scopes. The tools themselves are thin - // they resolve auth + scope, then delegate to lib/operations, which is the
+// no Redis) via mcp-handler; every request authenticates with either an OAuth
+// access token (interactive clients) or a bearer ApiKey (scripts), and every
+// tool is gated by the caller's scopes. The tools themselves are thin - // they resolve auth + scope, then delegate to lib/operations, which is the
 // single implementation shared with the REST routes. Writes are validated by
 // the field engine (lib/content/fields), never freeform.
 
@@ -14,8 +15,10 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js"
 
 import { ApiError } from "@/lib/http"
+import { auth } from "@/lib/auth/server"
+import { prisma } from "@/lib/prisma"
 import { authenticateBearer } from "@/lib/auth/bearer"
-import { parseScopes, assertScope, type ScopeAction } from "@/lib/keys/scopes"
+import { parseScopes, assertScope, type ScopeAction, type Scopes } from "@/lib/keys/scopes"
 import * as ops from "@/lib/content/operations"
 
 // Prisma + node:crypto run server-side only.
@@ -172,19 +175,67 @@ const handler = createMcpHandler(
   { disableSse: true },
 )
 
-// Resolve the bearer secret to a key + project, exposing them to tools via
-// authInfo.extra. Returning undefined makes withMcpAuth answer 401.
-async function verifyToken(_req: Request, bearerToken?: string): Promise<AuthInfo | undefined> {
-  const auth = await authenticateBearer(bearerToken)
-  if (!auth || !bearerToken) return undefined
-  return {
-    token: bearerToken,
-    clientId: auth.keyId,
-    scopes: parseScopes(auth.scopes).actions,
-    extra: { projectId: auth.projectId, scopes: auth.scopes },
+// An OAuth access token authenticates the human owner, so it gets full access to
+// their own project. Minted API keys keep their finer-grained per-key scopes.
+const FULL_SCOPES: Scopes = {
+  contentTypes: ["*"],
+  actions: ["read", "query", "create", "patch", "publish", "delete"],
+}
+
+// The project an authenticated user owns. Mirrors lib/project.ts's resolution
+// but is keyed by userId, since the OAuth token carries only the user (no
+// session). The first-created project wins, matching the management surface.
+async function projectForUser(userId: string) {
+  return prisma.project.findFirst({ where: { ownerId: userId }, orderBy: { createdAt: "asc" } })
+}
+
+// Resolve a request to a project + scopes, exposed to tools via authInfo.extra.
+// Two credentials are accepted: an OAuth 2.0 access token (interactive clients
+// that signed in through the browser) or a bearer API key (scripts, server to
+// server). Returning undefined makes withMcpAuth answer 401; every tool is still
+// gated by scopes in run().
+async function verifyToken(req: Request, bearerToken?: string): Promise<AuthInfo | undefined> {
+  // OAuth: validate the access token and map its user to their project.
+  const session = await auth.api.getMcpSession({ headers: req.headers }).catch(() => null)
+  if (session) {
+    const project = await projectForUser(session.userId)
+    if (project) {
+      return {
+        token: session.accessToken,
+        clientId: session.clientId,
+        scopes: FULL_SCOPES.actions,
+        extra: { projectId: project.id, scopes: FULL_SCOPES },
+      }
+    }
   }
+
+  // API key: resolve the bearer secret to its key + project.
+  const key = await authenticateBearer(bearerToken)
+  if (key && bearerToken) {
+    return {
+      token: bearerToken,
+      clientId: key.keyId,
+      scopes: parseScopes(key.scopes).actions,
+      extra: { projectId: key.projectId, scopes: key.scopes },
+    }
+  }
+
+  return undefined
 }
 
 const authed = withMcpAuth(handler, verifyToken, { required: true })
 
-export { authed as GET, authed as POST }
+// On a 401, point clients at our protected-resource metadata so a client that
+// has only the URL can discover the OAuth server and start the login flow
+// (RFC 9728 WWW-Authenticate challenge).
+const resourceMetadataUrl = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/.well-known/oauth-protected-resource`
+
+async function authedWithChallenge(req: Request): Promise<Response> {
+  const res = await authed(req)
+  if (res.status !== 401) return res
+  const headers = new Headers(res.headers)
+  headers.set("WWW-Authenticate", `Bearer resource_metadata="${resourceMetadataUrl}"`)
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+}
+
+export { authedWithChallenge as GET, authedWithChallenge as POST }

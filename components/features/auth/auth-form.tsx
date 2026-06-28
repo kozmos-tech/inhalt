@@ -56,6 +56,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
       return
     }
 
+    // If an MCP client sent us here mid OAuth flow (the authorize endpoint
+    // bounces signed-out users to /login with the OAuth query intact), hand the
+    // now-authenticated request back to it so it can issue the code. Otherwise
+    // this is a normal sign-in: go to the dashboard.
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("client_id") && params.get("redirect_uri")) {
+      window.location.href = `/api/auth/mcp/authorize?${params.toString()}`
+      return
+    }
+
     router.push("/dashboard")
   }
 

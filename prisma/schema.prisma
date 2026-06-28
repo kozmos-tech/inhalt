@@ -164,3 +164,65 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+// --- OAuth provider (better-auth `mcp` plugin) ------------------------------
+// These three models back the OAuth 2.0 authorization server that lets MCP
+// clients (Claude, Cursor) connect with a "paste the URL, sign in" flow instead
+// of a pasted bearer key. better-auth's mcp/oidc-provider plugin owns them;
+// field names and the lowercase model names (-> prisma.oauthApplication, etc.)
+// match what the library expects. An issued access token resolves to a User,
+// whose Project the MCP server then serves (see app/mcp/route.ts).
+
+/// A registered OAuth client. MCP clients self-register via
+/// POST /api/auth/mcp/register (RFC 7591 dynamic client registration).
+model OauthApplication {
+  id           String   @id
+  name         String
+  icon         String?
+  metadata     String?
+  clientId     String   @unique
+  clientSecret String?
+  redirectUrls String
+  type         String
+  disabled     Boolean  @default(false)
+  userId       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@map("oauth_application")
+}
+
+/// An issued access/refresh token pair. `userId` ties the token to the human who
+/// authorized it; `scopes` holds the granted OAuth scopes (space-separated).
+model OauthAccessToken {
+  id                    String   @id
+  accessToken           String   @unique
+  refreshToken          String   @unique
+  accessTokenExpiresAt  DateTime
+  refreshTokenExpiresAt DateTime
+  clientId              String
+  userId                String?
+  scopes                String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([userId])
+  @@map("oauth_access_token")
+}
+
+/// A user's recorded consent for a client, so they are not re-prompted.
+model OauthConsent {
+  id           String   @id
+  clientId     String
+  userId       String
+  scopes       String
+  consentGiven Boolean
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([userId])
+  @@map("oauth_consent")
+}

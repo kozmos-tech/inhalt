@@ -12,9 +12,14 @@
 
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
+import { mcp } from "better-auth/plugins"
 import { nextCookies } from "better-auth/next-js"
 
 import { prisma } from "@/lib/prisma"
+
+// The MCP server lives at <origin>/mcp; this is the OAuth "resource" clients
+// authorize against. Derived from the app origin so dev and prod stay in sync.
+const mcpResource = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/mcp`
 
 // Turn an email into a readable, URL-safe project slug, with a short random
 // suffix so two "jane@..." signups can't collide on Project.slug (it is @unique
@@ -49,6 +54,9 @@ export const auth = betterAuth({
       },
     },
   },
-  // nextCookies() must be the last plugin so it can attach Set-Cookie headers.
-  plugins: [nextCookies()],
+  // mcp() turns better-auth into an OAuth 2.0 server for MCP clients: discovery,
+  // dynamic client registration, authorize/token, PKCE. Unauthenticated authorize
+  // requests bounce to loginPage, which resumes the flow after sign-in.
+  // nextCookies() must stay last so it can attach Set-Cookie headers.
+  plugins: [mcp({ loginPage: "/login", resource: mcpResource }), nextCookies()],
 })
