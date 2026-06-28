@@ -19,20 +19,7 @@ Three steps, no SDK.
 2. **Operate on content.** The client reads the schema, finds the right entry, and proposes a clean patch against real, typed fields.
 3. **Save and publish.** Every change is checked against your schema, saved, and pushed to your live read API in one step.
 
-### Example MCP config
-
-```json
-{
-  "mcpServers": {
-    "inhalt": {
-      "url": "https://app.inhalt.tech/mcp",
-      "headers": {
-        "Authorization": "Bearer ••••"
-      }
-    }
-  }
-}
-```
+See [docs/getting-started.md](docs/getting-started.md) for the MCP config and a full walkthrough.
 
 ## Features
 
@@ -49,24 +36,12 @@ Three steps, no SDK.
 
 Inhalt works with every MCP client, including Claude, Cursor, VS Code, Zed, Windsurf, and Cline.
 
-## Getting started
+## Documentation
 
-This repository is a [Next.js](https://nextjs.org) application. To run it locally:
-
-```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-Other scripts:
-
-```bash
-npm run build   # production build
-npm run start   # serve the production build
-npm run lint    # run eslint
-```
+- [Getting started](docs/getting-started.md) — connect an MCP client and operate on content.
+- [Development](docs/development.md) — run the repo locally, environment, and scripts.
+- [Copy & tone](docs/copy-style.md) — writing guidelines for product copy.
+- [Roadmap](docs/roadmap/) — planned work ([auth](docs/roadmap/auth.md), [self-host](docs/roadmap/self-host.md)).
 
 ## License
 

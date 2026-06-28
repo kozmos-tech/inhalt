@@ -2,8 +2,7 @@
 //
 // The plaintext secret is shown exactly once at creation and never stored; we
 // keep a one-way sha-256 hash (used to authenticate MCP clients later) plus a
-// short display prefix. This mirrors the client-side mock in store.ts, which the
-// dashboard can swap for the /api/keys routes once the server is wired up.
+// short display prefix.
 
 import { createHash, randomBytes } from "node:crypto"
 
