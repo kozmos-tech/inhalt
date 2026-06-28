@@ -95,19 +95,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className={label}>
-                Password
-              </label>
-              {mode === "signin" && (
-                <button
-                  type="button"
-                  className="text-[13px] font-medium text-zinc-500 transition hover:text-zinc-200"
-                >
-                  Forgot?
-                </button>
-              )}
-            </div>
+            <label htmlFor="password" className={label}>
+              Password
+            </label>
             <input
               id="password"
               type="password"

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useEffect, useState, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CopyButton } from "../components/copy-button"
 import {
   CheckIcon,
@@ -15,12 +15,10 @@ import {
 import { Wordmark } from "../components/wordmark"
 import {
   createKey,
-  getKeysSnapshot,
-  getServerKeysSnapshot,
+  listKeys,
   revokeKey,
-  subscribe,
   type ApiKey,
-} from "../lib/store"
+} from "../lib/keys-client"
 import { signOut, useSession } from "../lib/auth-client"
 import { eyebrow, ghostButton, input, primaryButton } from "../lib/ui"
 
@@ -42,8 +40,8 @@ const SECTIONS = [
   { id: "keys", index: "02", label: "API keys", icon: KeyIcon },
 ] as const
 
-function formatDate(ts: number) {
-  return new Date(ts).toLocaleDateString(undefined, {
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -58,11 +56,11 @@ function initials(email: string) {
 export default function DashboardPage() {
   const router = useRouter()
   const { data: session } = useSession()
-  const keys = useSyncExternalStore(
-    subscribe,
-    getKeysSnapshot,
-    getServerKeysSnapshot,
-  )
+
+  const [keys, setKeys] = useState<ApiKey[]>([])
+  const [loading, setLoading] = useState(true)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [active, setActive] = useState<string>("connection")
   const [creating, setCreating] = useState(false)
@@ -70,6 +68,23 @@ export default function DashboardPage() {
   const [revealed, setRevealed] = useState<ApiKey | null>(null)
 
   const email = session?.user?.email ?? "guest@inhalt.tech"
+
+  const refresh = useCallback(async () => {
+    try {
+      setKeys(await listKeys())
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not load keys.")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // Load the signed-in user's keys once on mount. refresh() only setStates after
+  // its awaited fetch resolves (not synchronously), so this can't cascade renders.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
+    void refresh()
+  }, [refresh])
 
   // Scroll-spy: highlight the nav item for whichever section is in view.
   useEffect(() => {
@@ -93,11 +108,36 @@ export default function DashboardPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
-  function onCreate(e: React.FormEvent) {
+  async function onCreate(e: React.FormEvent) {
     e.preventDefault()
-    setRevealed(createKey(newName))
-    setNewName("")
-    setCreating(false)
+    if (busy) return
+
+    setBusy(true)
+    setError(null)
+    try {
+      const created = await createKey(newName)
+      setRevealed(created)
+      setNewName("")
+      setCreating(false)
+      await refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not create key.")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function onRevoke(id: string) {
+    setError(null)
+    // Optimistic: drop it from the list immediately, restore on failure.
+    const previous = keys
+    setKeys((current) => current.filter((key) => key.id !== id))
+    try {
+      await revokeKey(id)
+    } catch (err) {
+      setKeys(previous)
+      setError(err instanceof Error ? err.message : "Could not revoke key.")
+    }
   }
 
   async function onSignOut() {
@@ -218,6 +258,9 @@ export default function DashboardPage() {
             <Connection />
             <Keys
               keys={keys}
+              loading={loading}
+              busy={busy}
+              error={error}
               creating={creating}
               setCreating={setCreating}
               newName={newName}
@@ -225,6 +268,7 @@ export default function DashboardPage() {
               revealed={revealed}
               setRevealed={setRevealed}
               onCreate={onCreate}
+              onRevoke={onRevoke}
             />
           </div>
         </main>
@@ -350,6 +394,9 @@ function Connection() {
 
 type KeysProps = {
   keys: ApiKey[]
+  loading: boolean
+  busy: boolean
+  error: string | null
   creating: boolean
   setCreating: (v: boolean) => void
   newName: string
@@ -357,10 +404,14 @@ type KeysProps = {
   revealed: ApiKey | null
   setRevealed: (v: ApiKey | null) => void
   onCreate: (e: React.FormEvent) => void
+  onRevoke: (id: string) => void
 }
 
 function Keys({
   keys,
+  loading,
+  busy,
+  error,
   creating,
   setCreating,
   newName,
@@ -368,6 +419,7 @@ function Keys({
   revealed,
   setRevealed,
   onCreate,
+  onRevoke,
 }: KeysProps) {
   return (
     <section id="keys" className="scroll-mt-20">
@@ -432,8 +484,12 @@ function Keys({
               placeholder="Key name, e.g. Production or Claude Desktop"
               className={input}
             />
-            <button type="submit" className={primaryButton + " shrink-0"}>
-              Create
+            <button
+              type="submit"
+              disabled={busy}
+              className={primaryButton + " shrink-0 disabled:opacity-60"}
+            >
+              {busy ? "…" : "Create"}
             </button>
             <button
               type="button"
@@ -448,15 +504,27 @@ function Keys({
           </form>
         )}
 
+        {error && (
+          <p className="text-[13px] text-red-400" role="alert">
+            {error}
+          </p>
+        )}
+
         {/* list */}
         <div className="panel overflow-hidden rounded-2xl">
           <div className="hairline flex items-center justify-between gap-3 border-b px-5 py-3.5">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-500">
-              {keys.length} {keys.length === 1 ? "key" : "keys"} active
+              {loading
+                ? "Loading…"
+                : `${keys.length} ${keys.length === 1 ? "key" : "keys"} active`}
             </p>
           </div>
 
-          {keys.length === 0 ? (
+          {loading ? (
+            <div className="px-5 py-10 text-center text-sm text-zinc-500">
+              Loading keys…
+            </div>
+          ) : keys.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
               <span className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-500">
                 <KeyIcon size={18} />
@@ -505,7 +573,7 @@ function Keys({
                     </div>
                   </div>
                   <button
-                    onClick={() => revokeKey(key.id)}
+                    onClick={() => onRevoke(key.id)}
                     className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-zinc-500 opacity-0 transition hover:bg-white/[0.06] hover:text-zinc-100 focus:opacity-100 focus-visible:ring-2 focus-visible:ring-white/15 group-hover:opacity-100"
                   >
                     <TrashIcon size={13} />
