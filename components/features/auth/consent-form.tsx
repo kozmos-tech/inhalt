@@ -64,7 +64,7 @@ export function ConsentForm({
       <h2>Authorize access</h2>
       <p>
         An MCP client wants to connect to your Inhalt content. Approving lets it
-        act on your behalf, the same as using the dashboard.
+        act on your behalf.
       </p>
 
       {scopes.length > 0 && (
@@ -82,11 +82,16 @@ export function ConsentForm({
       )}
 
       <p>
-        <button type="button" onClick={() => decide(true)} disabled={pending || !consentCode}>
-          {pending ? "…" : "Approve"}
-        </button>{" "}
         <button type="button" onClick={() => decide(false)} disabled={pending || !consentCode}>
           Deny
+        </button>{" "}
+        <button
+          type="button"
+          className="primary"
+          onClick={() => decide(true)}
+          disabled={pending || !consentCode}
+        >
+          {pending ? "…" : "Approve"}
         </button>
       </p>
 
