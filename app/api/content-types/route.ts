@@ -3,10 +3,10 @@
 //   POST /api/content-types        create one (its field definitions are validated)
 
 import { z } from "zod"
-import { prisma } from "../../lib/prisma"
-import { getProject } from "../../lib/project"
-import { handle, json } from "../../lib/api"
-import { fieldsSchema } from "../../lib/fields"
+import { prisma } from "@/lib/prisma"
+import { getProject } from "@/lib/project"
+import { handle, json } from "@/lib/http"
+import { fieldsSchema } from "@/lib/content/fields"
 
 const createSchema = z.object({
   key: z.string().min(1),

@@ -2,10 +2,10 @@
 //
 // Two halves:
 //   - The content model: Project (the tenant boundary), ApiKey, ContentType,
-//     Entry. Writes are typed against ContentType.fields (see app/lib/fields.ts).
+//     Entry. Writes are typed against ContentType.fields (see lib/content/fields.ts).
 //   - Authentication: User, Session, Account, Verification are owned by
-//     better-auth (app/lib/auth.ts). Each User owns their Project(s); the bearer
-//     ApiKeys gate the MCP server (app/lib/bearer-auth.ts).
+//     better-auth (lib/auth/server.ts). Each User owns their Project(s); the bearer
+//     ApiKeys gate the MCP server (lib/auth/bearer.ts).
 
 generator client {
   provider = "prisma-client"
@@ -97,7 +97,7 @@ enum EntryStatus {
 }
 
 // --- Authentication (better-auth) -------------------------------------------
-// These four models are managed by better-auth (app/lib/auth.ts). Field names
+// These four models are managed by better-auth (lib/auth/server.ts). Field names
 // and table mappings match what the library expects; do not rename them. The
 // only local addition is the User -> Project ownership relation.
 

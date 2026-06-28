@@ -4,12 +4,12 @@
 
 import { z } from "zod"
 import { NextRequest } from "next/server"
-import { prisma } from "../../../../lib/prisma"
-import { Prisma } from "../../../../generated/prisma/client"
-import { getProject } from "../../../../lib/project"
-import { handle, json } from "../../../../lib/api"
-import { validateEntry } from "../../../../lib/fields"
-import { requireContentType } from "../../../../lib/lookup"
+import { prisma } from "@/lib/prisma"
+import { Prisma } from "@/app/generated/prisma/client"
+import { getProject } from "@/lib/project"
+import { handle, json } from "@/lib/http"
+import { validateEntry } from "@/lib/content/fields"
+import { requireContentType } from "@/lib/content/lookup"
 
 type Params = { params: Promise<{ typeKey: string }> }
 

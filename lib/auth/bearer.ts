@@ -5,13 +5,13 @@
 // (The management REST routes resolve their tenant differently - from the user's
 // session; see lib/project.ts.)
 
-import { prisma } from "./prisma"
-import { hashSecret } from "./keys"
+import { prisma } from "@/lib/prisma"
+import { hashSecret } from "@/lib/keys/tokens"
 
 export type AuthenticatedKey = {
   keyId: string
   projectId: string
-  scopes: unknown // raw ApiKey.scopes JSON; parsed by lib/scopes
+  scopes: unknown // raw ApiKey.scopes JSON; parsed by lib/keys/scopes
 }
 
 // Resolve a plaintext bearer secret to its (non-revoked) key + project, or null

@@ -5,9 +5,9 @@
 // key drops out of the GET /api/keys listing and will fail auth once the MCP
 // server checks it.
 
-import { prisma } from "../../../lib/prisma"
-import { getProject } from "../../../lib/project"
-import { handle, json, ApiError } from "../../../lib/api"
+import { prisma } from "@/lib/prisma"
+import { getProject } from "@/lib/project"
+import { handle, json, ApiError } from "@/lib/http"
 
 type Params = { params: Promise<{ id: string }> }
 

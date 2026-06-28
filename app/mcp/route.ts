@@ -5,7 +5,7 @@
 // no Redis) via mcp-handler; every request authenticates a bearer ApiKey and
 // every tool is gated by that key's scopes. The tools themselves are thin - // they resolve auth + scope, then delegate to lib/operations, which is the
 // single implementation shared with the REST routes. Writes are validated by
-// the field engine (lib/fields), never freeform.
+// the field engine (lib/content/fields), never freeform.
 
 import { z } from "zod"
 import { ZodError } from "zod"
@@ -13,10 +13,10 @@ import { createMcpHandler, withMcpAuth } from "mcp-handler"
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js"
 
-import { ApiError } from "../lib/api"
-import { authenticateBearer } from "../lib/bearer-auth"
-import { parseScopes, assertScope, type ScopeAction } from "../lib/scopes"
-import * as ops from "../lib/operations"
+import { ApiError } from "@/lib/http"
+import { authenticateBearer } from "@/lib/auth/bearer"
+import { parseScopes, assertScope, type ScopeAction } from "@/lib/keys/scopes"
+import * as ops from "@/lib/content/operations"
 
 // Prisma + node:crypto run server-side only.
 export const runtime = "nodejs"

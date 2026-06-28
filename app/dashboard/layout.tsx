@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
-import { auth } from "../lib/auth"
+import { auth } from "@/lib/auth/server"
 
 // Real auth gate for everything under /dashboard. proxy.ts does an optimistic
 // cookie-only check for fast redirects, but it can't tell a valid session from a

@@ -1,7 +1,7 @@
 // Seed the default project.
 //
 // Auth is deferred, so the management API scopes to a single default project
-// (see app/lib/project.ts). This creates that project plus one sample content
+// (see lib/project.ts). This creates that project plus one sample content
 // type so the API works the moment the tables exist. Safe to run repeatedly:
 // every write is an upsert. Run with `npm run db:seed` (writes to your DB).
 

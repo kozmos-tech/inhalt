@@ -2,14 +2,14 @@
 //
 // requireSession() reads the better-auth session from the request cookies and
 // throws the standard ApiError(401) envelope when there is none, so route
-// handlers wrapped in handle() (lib/api.ts) get a consistent unauthorized
+// handlers wrapped in handle() (lib/http.ts) get a consistent unauthorized
 // response. This is the secure check - it hits the session store, unlike the
 // optimistic cookie-only check in proxy.ts.
 
 import { headers } from "next/headers"
 
-import { auth } from "./auth"
-import { ApiError } from "./api"
+import { auth } from "@/lib/auth/server"
+import { ApiError } from "@/lib/http"
 
 export type Session = NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>
 

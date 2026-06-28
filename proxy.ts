@@ -2,7 +2,7 @@
 //
 // An optimistic, cookie-only check: it never touches the database, so it stays
 // fast on every navigation. It only decides redirects - the authoritative check
-// happens at the data source via requireSession() (app/lib/session.ts). Logged-in
+// happens at the data source via requireSession() (lib/auth/session.ts). Logged-in
 // users are bounced away from the auth pages; anonymous users are bounced to
 // /login when they reach the dashboard.
 

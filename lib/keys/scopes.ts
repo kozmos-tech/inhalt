@@ -4,9 +4,9 @@
 // Every MCP tool declares the action it performs (and the content type it
 // touches, when applicable); `assertScope` rejects anything the key was not
 // granted. `"*"` in contentTypes means every type. Mirrors DEFAULT_SCOPES in
-// lib/keys.ts, which is what freshly minted keys persist.
+// lib/keys/tokens.ts, which is what freshly minted keys persist.
 
-import { ApiError } from "./api"
+import { ApiError } from "@/lib/http"
 
 export type Scopes = {
   contentTypes: string[]

@@ -6,7 +6,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 
-import { generateKey, hashSecret, DEFAULT_SCOPES } from "../app/lib/keys"
+import { generateKey, hashSecret, DEFAULT_SCOPES } from "../lib/keys/tokens"
 
 test("generateKey produces the documented secret format", () => {
   const { secret } = generateKey()

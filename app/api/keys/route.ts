@@ -3,10 +3,10 @@
 //   POST /api/keys    create a key; the full secret is returned exactly ONCE
 
 import { z } from "zod"
-import { prisma } from "../../lib/prisma"
-import { getProject } from "../../lib/project"
-import { handle, json } from "../../lib/api"
-import { generateKey, DEFAULT_SCOPES } from "../../lib/keys"
+import { prisma } from "@/lib/prisma"
+import { getProject } from "@/lib/project"
+import { handle, json } from "@/lib/http"
+import { generateKey, DEFAULT_SCOPES } from "@/lib/keys/tokens"
 
 // Columns safe to expose. The hash never leaves the server and the plaintext
 // secret is only ever returned inline from POST, below.

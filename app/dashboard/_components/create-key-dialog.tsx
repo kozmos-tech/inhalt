@@ -1,0 +1,53 @@
+"use client"
+
+import type { FormEvent, Ref } from "react"
+
+type CreateKeyDialogProps = {
+  ref: Ref<HTMLDialogElement>
+  newName: string
+  onNewNameChange: (value: string) => void
+  onSubmit: (e: FormEvent) => void
+  onCancel: () => void
+  busy: boolean
+  error: string | null
+}
+
+export function CreateKeyDialog({
+  ref,
+  newName,
+  onNewNameChange,
+  onSubmit,
+  onCancel,
+  busy,
+  error,
+}: CreateKeyDialogProps) {
+  return (
+    <dialog ref={ref} onClose={onCancel}>
+      <form onSubmit={onSubmit}>
+        <h2>Create API key</h2>
+        <p>Give the key a name so you can recognize it later.</p>
+        <label htmlFor="key-name">Name</label>
+        <input
+          id="key-name"
+          autoFocus
+          value={newName}
+          onChange={(e) => onNewNameChange(e.target.value)}
+          placeholder="e.g. Production or Claude Desktop"
+        />
+        {error && (
+          <p role="alert">
+            <strong>{error}</strong>
+          </p>
+        )}
+        <div className="dialog-actions">
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+          <button type="submit" className="primary" disabled={busy}>
+            {busy ? "Creating..." : "Create key"}
+          </button>
+        </div>
+      </form>
+    </dialog>
+  )
+}

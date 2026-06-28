@@ -4,8 +4,8 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 
-import { parseScopes, assertScope } from "../app/lib/scopes"
-import { ApiError } from "../app/lib/api"
+import { parseScopes, assertScope } from "../lib/keys/scopes"
+import { ApiError } from "../lib/http"
 
 // --- parseScopes: fail closed on anything malformed --------------------------
 

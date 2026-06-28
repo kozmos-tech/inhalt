@@ -7,9 +7,9 @@
 // `published` copy; drafts are never visible here.
 
 import { NextRequest } from "next/server"
-import { prisma } from "../../../../lib/prisma"
-import { Prisma } from "../../../../generated/prisma/client"
-import { handle, json, ApiError } from "../../../../lib/api"
+import { prisma } from "@/lib/prisma"
+import { Prisma } from "@/app/generated/prisma/client"
+import { handle, json, ApiError } from "@/lib/http"
 
 type Params = { params: Promise<{ projectSlug: string; typeKey: string }> }
 

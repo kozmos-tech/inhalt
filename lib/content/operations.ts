@@ -3,14 +3,14 @@
 // Each function takes an already-resolved projectId plus arguments and returns
 // plain data (or throws an ApiError). The REST route handlers and the MCP tools
 // both call these, so there is exactly one implementation of "create an entry",
-// "publish an entry", etc. - the field engine (lib/fields) stays the single
+// "publish an entry", etc. - the field engine (lib/content/fields) stays the single
 // contract for what a write may contain.
 
-import { prisma } from "./prisma"
-import { Prisma } from "../generated/prisma/client"
-import { ApiError } from "./api"
-import { validateEntry } from "./fields"
-import { requireContentType, requireEntry } from "./lookup"
+import { prisma } from "@/lib/prisma"
+import { Prisma } from "@/app/generated/prisma/client"
+import { ApiError } from "@/lib/http"
+import { validateEntry } from "@/lib/content/fields"
+import { requireContentType, requireEntry } from "@/lib/content/lookup"
 
 const MAX_LIMIT = 200
 

@@ -6,7 +6,7 @@
 
 import { toNextJsHandler } from "better-auth/next-js"
 
-import { auth } from "../../../lib/auth"
+import { auth } from "@/lib/auth/server"
 
 // better-auth uses node:crypto and the Prisma client; keep it off the edge.
 export const runtime = "nodejs"

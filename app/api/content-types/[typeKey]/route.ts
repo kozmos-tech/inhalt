@@ -4,11 +4,11 @@
 //   DELETE /api/content-types/:typeKey      remove (cascades to its entries)
 
 import { z } from "zod"
-import { prisma } from "../../../lib/prisma"
-import { getProject } from "../../../lib/project"
-import { handle, json } from "../../../lib/api"
-import { fieldsSchema } from "../../../lib/fields"
-import { requireContentType } from "../../../lib/lookup"
+import { prisma } from "@/lib/prisma"
+import { getProject } from "@/lib/project"
+import { handle, json } from "@/lib/http"
+import { fieldsSchema } from "@/lib/content/fields"
+import { requireContentType } from "@/lib/content/lookup"
 
 type Params = { params: Promise<{ typeKey: string }> }
 

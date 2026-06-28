@@ -1,7 +1,7 @@
 // better-auth server instance - user accounts and dashboard sessions.
 //
 // This is the human-facing half of auth (email + password, cookie sessions),
-// distinct from the machine-facing bearer keys in bearer-auth.ts that gate the
+// distinct from the machine-facing bearer keys in lib/auth/bearer.ts that gate the
 // MCP server. Sessions are stored in Postgres via the Prisma adapter; the
 // nextCookies() plugin lets server actions set the session cookie.
 //
@@ -14,7 +14,7 @@ import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
 
-import { prisma } from "./prisma"
+import { prisma } from "@/lib/prisma"
 
 // Turn an email into a readable, URL-safe project slug, with a short random
 // suffix so two "jane@..." signups can't collide on Project.slug (it is @unique

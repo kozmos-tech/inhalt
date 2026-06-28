@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { signIn, signUp } from "../lib/auth-client"
+import { signIn, signUp } from "@/lib/auth/client"
 
 type Mode = "signin" | "signup"
 

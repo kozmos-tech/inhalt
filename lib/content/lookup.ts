@@ -2,8 +2,8 @@
 // handlers can fetch a content type or entry in one line and let `handle()`
 // turn the ApiError into a 404 response.
 
-import { prisma } from "./prisma"
-import { ApiError } from "./api"
+import { prisma } from "@/lib/prisma"
+import { ApiError } from "@/lib/http"
 
 export async function requireContentType(projectId: string, key: string) {
   const type = await prisma.contentType.findUnique({

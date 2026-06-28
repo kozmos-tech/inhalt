@@ -6,7 +6,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { ZodError } from "zod"
 
-import { fieldsSchema, compileFields, validateEntry, type FieldDef } from "../app/lib/fields"
+import { fieldsSchema, compileFields, validateEntry, type FieldDef } from "../lib/content/fields"
 
 // --- fieldsSchema: the definition itself must be well-formed -----------------
 

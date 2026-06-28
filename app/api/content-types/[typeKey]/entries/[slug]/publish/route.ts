@@ -4,11 +4,11 @@
 // Copies the working draft to the published copy and stamps publishedAt. There
 // is no version history: the model stays at drafts -> save -> publish.
 
-import { prisma } from "../../../../../../lib/prisma"
-import { Prisma } from "../../../../../../generated/prisma/client"
-import { getProject } from "../../../../../../lib/project"
-import { handle, json } from "../../../../../../lib/api"
-import { requireContentType, requireEntry } from "../../../../../../lib/lookup"
+import { prisma } from "@/lib/prisma"
+import { Prisma } from "@/app/generated/prisma/client"
+import { getProject } from "@/lib/project"
+import { handle, json } from "@/lib/http"
+import { requireContentType, requireEntry } from "@/lib/content/lookup"
 
 type Params = { params: Promise<{ typeKey: string; slug: string }> }
 

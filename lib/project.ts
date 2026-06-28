@@ -6,11 +6,11 @@
 // the auth model lives here and the handlers stay identity-agnostic.
 //
 // Note: the public read API (app/api/read/[projectSlug]/...) does NOT use this - // it resolves a project by the slug in its path and stays unauthenticated. The
-// MCP surface resolves its own tenant from the bearer key (lib/bearer-auth.ts).
+// MCP surface resolves its own tenant from the bearer key (lib/auth/bearer.ts).
 
-import { prisma } from "./prisma"
-import { ApiError } from "./api"
-import { requireSession } from "./session"
+import { prisma } from "@/lib/prisma"
+import { ApiError } from "@/lib/http"
+import { requireSession } from "@/lib/auth/session"
 
 export async function getProject() {
   const session = await requireSession()

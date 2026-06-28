@@ -4,8 +4,8 @@
 // Returns the published copy only. A draft-only entry (never published) is a 404
 // here, exactly as it would be to any external reader.
 
-import { prisma } from "../../../../../lib/prisma"
-import { handle, json, ApiError } from "../../../../../lib/api"
+import { prisma } from "@/lib/prisma"
+import { handle, json, ApiError } from "@/lib/http"
 
 type Params = { params: Promise<{ projectSlug: string; typeKey: string; slug: string }> }
 

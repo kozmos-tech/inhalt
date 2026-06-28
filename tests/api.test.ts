@@ -6,7 +6,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import { z } from "zod"
 
-import { handle, ApiError, json } from "../app/lib/api"
+import { handle, ApiError, json } from "../lib/http"
 
 async function bodyOf(res: Response): Promise<{ status: number; body: { error?: { code?: string; issues?: unknown } } }> {
   return { status: res.status, body: await res.json() }
