@@ -48,6 +48,18 @@ export default function LetterPage() {
                   one you reach for too.
                 </p>
               </div>
+
+              <div className="lp-letter-sign">
+                <p>Meduard Krasniqi</p>
+                <a
+                  className="lp-letter-sign-link"
+                  href="https://www.linkedin.com/in/meduardkrasniqi/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  linkedin.com/in/meduardkrasniqi
+                </a>
+              </div>
             </div>
           </div>
         </article>
