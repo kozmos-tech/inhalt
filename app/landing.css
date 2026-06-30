@@ -178,6 +178,10 @@
   font-family: var(--font-heading), Georgia, serif; font-style: italic;
   font-size: 17px; line-height: 1.5; color: var(--text);
 }
+.lp-letter-sign-place {
+  margin-top: 0.2rem; font-style: normal; font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 13.5px; color: var(--muted); letter-spacing: 0.01em;
+}
 .lp-letter-sign-link {
   display: inline-block; margin-top: 0.5rem; font-family: var(--font-body), system-ui, sans-serif;
   font-style: normal; font-size: 14px; color: var(--muted); text-decoration: none;

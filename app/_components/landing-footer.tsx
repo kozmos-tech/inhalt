@@ -11,7 +11,7 @@ export function LandingFooter({ year }: LandingFooterProps) {
       <div className="lp-shell lp-footer-inner">
         <span className="lp-footer-mark">Inhalt</span>
         <p className="lp-footer-meta">
-          © {year} Inhalt · MIT licensed · Built in the open
+          © {year} Based in Berlin
         </p>
         <a href="#top" className="lp-quiet-link lp-footer-top">
           Back to top

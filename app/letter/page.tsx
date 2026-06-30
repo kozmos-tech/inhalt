@@ -51,6 +51,7 @@ export default function LetterPage() {
 
               <div className="lp-letter-sign">
                 <p>Meduard Krasniqi</p>
+                <p className="lp-letter-sign-place">Berlin, 2026</p>
                 <a
                   className="lp-letter-sign-link"
                   href="https://www.linkedin.com/in/meduardkrasniqi/"
