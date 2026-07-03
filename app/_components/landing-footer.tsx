@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRightIcon } from "@/components/ui/icons"
-import { POSTS } from "../blog/utils/registry"
+import { POSTS, postLabel } from "../blog/utils/registry"
 
 type LandingFooterProps = {
   year: number
@@ -17,7 +17,7 @@ export function LandingFooter({ year }: LandingFooterProps) {
             <div className="lp-footer-links-grid">
               {POSTS.map((post) => (
                 <Link key={post.slug} href={`/blog/${post.slug}`} className="lp-footer-link">
-                  {post.competitor} alternatives
+                  {postLabel(post)}
                 </Link>
               ))}
             </div>

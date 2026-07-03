@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRightIcon } from "@/components/ui/icons"
-import { POSTS } from "./utils/registry"
+import { POSTS, postLabel } from "./utils/registry"
 import { readingMinutes } from "./utils/render"
 
 export const metadata: Metadata = {
@@ -37,7 +37,7 @@ export default async function BlogIndex() {
             <li key={post.slug} className="blog-list-item">
               <Link href={`/blog/${post.slug}`} className="blog-list-link">
                 <div className="blog-list-main">
-                  <span className="blog-list-tag">{post.competitor} alternatives</span>
+                  <span className="blog-list-tag">{postLabel(post)}</span>
                   <span className="blog-list-title">{post.title}</span>
                   <span className="blog-list-desc">{post.description}</span>
                   <span className="blog-list-meta">
