@@ -40,9 +40,10 @@
 }
 .lp-mark {
   display: grid; place-items: center; width: 26px; height: 26px;
-  border-radius: 7px; background: var(--accent); color: var(--accent-ink);
+  border-radius: 7px; overflow: hidden;
   box-shadow: 0 1px 2px rgba(22, 22, 26, 0.2);
 }
+.lp-mark img { width: 100%; height: 100%; object-fit: cover; }
 .lp-nav { display: none; align-items: center; gap: 2rem; font-size: 13.5px; color: var(--muted); }
 .lp-nav a { transition: color 0.12s ease; }
 .lp-nav a:hover { color: var(--text); }
