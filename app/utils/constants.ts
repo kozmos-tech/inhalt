@@ -10,9 +10,8 @@ import type { Feature, Step } from "./types"
 
 export const GITHUB_URL = "https://github.com/Connected-Future/inhalt"
 
-// Public origin used to build absolute URLs (sitemap, metadata). Set
-// NEXT_PUBLIC_SITE_URL to the deployed origin; falls back to localhost in dev.
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "")
+// Public origin used to build absolute URLs (sitemap, metadata).
+export const SITE_URL = "https://inhalt.tech"
 
 // MCP clients we showcase in the "works with every MCP client" strip.
 export const CLIENTS = ["Claude", "Cursor", "VS Code", "Zed", "Windsurf", "Cline"]
