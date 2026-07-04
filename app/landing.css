@@ -206,7 +206,7 @@
 @media (min-width: 720px) {
   .lp-steps { grid-template-columns: repeat(3, 1fr); gap: 3rem; }
   .lp-features { grid-template-columns: repeat(2, 1fr); column-gap: 3rem; }
-  .lp-footer-nav { grid-template-columns: 2fr 1fr; gap: 3rem; }
+  .lp-footer-nav { grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
   .lp-footer-inner { flex-direction: row; justify-content: space-between; text-align: left; }
   .lp-clients-inner { flex-direction: row; justify-content: space-between; text-align: left; gap: 2rem; }
   .lp-clients-list { justify-content: flex-end; }

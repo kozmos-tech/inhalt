@@ -34,6 +34,20 @@ export function LandingFooter({ year }: LandingFooterProps) {
               Our letter
             </Link>
           </div>
+          <div className="lp-footer-col">
+            <span className="lp-footer-col-title">Company</span>
+            <a
+              href="https://kozmos.tech"
+              target="_blank"
+              rel="noreferrer"
+              className="lp-footer-link"
+            >
+              kozmos.tech
+            </a>
+            <a href="mailto:meduard.krasniqi@kozmos.tech" className="lp-footer-link">
+              Contact
+            </a>
+          </div>
         </nav>
 
         <div className="lp-footer-inner">
