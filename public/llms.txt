@@ -1,0 +1,34 @@
+# Inhalt
+
+> The CMS your AI tools can run. Inhalt is an open-source, MCP-native headless CMS: instead of clicking through an admin UI, your content layer is exposed over the Model Context Protocol (MCP). Any MCP client (Claude, Cursor, VS Code, Zed, Windsurf, Cline) connects to the Inhalt server and you create and edit content just by chatting. The protocol is the API — clients read your typed schema, find the right entry, and propose clean, validated patches against real fields, never freeform text.
+
+- MCP endpoint: https://inhalt.tech
+- Self-hostable: one container, your database, your keys. A hosted edge is also available.
+- License: MIT
+
+## Docs
+
+- [Getting started](https://inhalt.tech/docs/getting-started): Connect an MCP client and operate on content.
+- [Concepts](https://inhalt.tech/docs/concepts): Projects, content types, entries, and the draft/publish model.
+- [API reference](https://inhalt.tech/docs/api): Overview of the Read API and MCP API.
+- [Read API](https://inhalt.tech/docs/api/read): Query published content over a clean, fast HTTP read API.
+- [MCP API](https://inhalt.tech/docs/api/mcp): The tools MCP clients use to read, query, and patch content.
+
+## Blog
+
+- [Inhalt vs Contentful](https://inhalt.tech/blog/inhalt-vs-contentful): Both give you typed content and a clean API; the split is the editing app — Contentful hands you one, Inhalt has none.
+- [Inhalt vs Sanity](https://inhalt.tech/blog/inhalt-vs-sanity): Sanity asks you to build and run the editing app; Inhalt drops it and edits through the client you already use.
+- [Inhalt vs Strapi](https://inhalt.tech/blog/inhalt-vs-strapi): Both are open source and self-hosted with no seat bill; Strapi ships an admin app to run, Inhalt has none.
+- [Inhalt vs WordPress](https://inhalt.tech/blog/inhalt-vs-wordpress): WordPress lives in its admin panel and plugins; Inhalt has no dashboard and feeds any front end through a clean API.
+- [Inhalt vs Storyblok](https://inhalt.tech/blog/inhalt-vs-storyblok): Storyblok is built around a visual page builder; Inhalt drops the canvas for strict typed content edited by chatting.
+- [Contentful alternatives](https://inhalt.tech/blog/contentful-alternatives): Open source and headless options to move to when Contentful's pricing or admin app starts to weigh on you.
+- [Sanity alternatives](https://inhalt.tech/blog/sanity-alternatives): Where to go when you love the Sanity model but not the work of building and running the editing app.
+- [Strapi alternatives](https://inhalt.tech/blog/strapi-alternatives): Self-hosted and open source CMS options for when Strapi's upkeep or admin app is more than you need.
+- [WordPress alternatives](https://inhalt.tech/blog/wordpress-alternatives): Leaner ways to manage content once the WordPress admin, plugins, and updates become a job of their own.
+- [Storyblok alternatives](https://inhalt.tech/blog/storyblok-alternatives): Options for teams who want typed, structured content instead of a visual page builder.
+- [Ghost alternatives](https://inhalt.tech/blog/ghost-alternatives): Where to look when you need more content types and a real API than Ghost was built to give.
+
+## Optional
+
+- [Why we are building Inhalt](https://inhalt.tech/letter): The founding letter behind Inhalt.
+- [GitHub repository](https://github.com/Connected-Future/inhalt): Source code, issues, and self-hosting instructions.
