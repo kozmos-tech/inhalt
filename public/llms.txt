@@ -31,4 +31,4 @@
 ## Optional
 
 - [Why we are building Inhalt](https://inhalt.tech/letter): The founding letter behind Inhalt.
-- [GitHub repository](https://github.com/Connected-Future/inhalt): Source code, issues, and self-hosting instructions.
+- [GitHub repository](https://github.com/kozmos-tech/inhalt): Source code, issues, and self-hosting instructions.

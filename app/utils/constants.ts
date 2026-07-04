@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/icons"
 import type { Feature, Step } from "./types"
 
-export const GITHUB_URL = "https://github.com/Connected-Future/inhalt"
+export const GITHUB_URL = "https://github.com/kozmos-tech/inhalt"
 
 // Public origin used to build absolute URLs (sitemap, metadata).
 export const SITE_URL = "https://inhalt.tech"
