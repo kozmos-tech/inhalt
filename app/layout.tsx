@@ -39,6 +39,7 @@ export default function RootLayout({
       <body>
         {children}
         <Analytics />
+        <script defer src="https://yourtraffic.dev/script.js"></script>
       </body>
     </html>
   );
