@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Match the landing page: Fraunces for headings, Geist Sans for body/UI,
@@ -38,7 +37,6 @@ export default function RootLayout({
     >
       <body>
         {children}
-        <Analytics />
         <script defer src="https://yourtraffic.dev/script.js"></script>
       </body>
     </html>
