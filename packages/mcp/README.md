@@ -1,6 +1,6 @@
 # @kozmos-tech/inhalt
 
-MCP bridge for [Inhalt](https://inhalt.tech) — the CMS your AI tools can run.
+An open-source headless CMS for managing content models and entries.
 
 Inhalt's MCP server is hosted and remote. This package is a tiny launcher that
 bridges any stdio MCP client to the hosted endpoint, so clients that only speak

@@ -1,7 +1,7 @@
 {
   "name": "@kozmos-tech/inhalt",
-  "version": "0.1.0",
-  "description": "MCP bridge for Inhalt — the CMS your AI tools can run. Connects any stdio MCP client to the hosted Inhalt server.",
+  "version": "0.1.1",
+  "description": "An open-source headless CMS for managing content models and entries.",
   "mcpName": "io.github.kozmos-tech/inhalt",
   "license": "MIT",
   "type": "module",
