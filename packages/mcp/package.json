@@ -1,0 +1,34 @@
+{
+  "name": "@kozmos-tech/inhalt",
+  "version": "0.1.0",
+  "description": "MCP bridge for Inhalt — the CMS your AI tools can run. Connects any stdio MCP client to the hosted Inhalt server.",
+  "mcpName": "io.github.kozmos-tech/inhalt",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "inhalt-mcp": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "cms",
+    "inhalt"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kozmos-tech/inhalt.git",
+    "directory": "packages/mcp"
+  },
+  "homepage": "https://inhalt.tech",
+  "bugs": "https://github.com/kozmos-tech/inhalt/issues",
+  "dependencies": {
+    "mcp-remote": "^0.1.38"
+  }
+}
